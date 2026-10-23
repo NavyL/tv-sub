@@ -62,3 +62,8 @@ under `curated.warnings` in `status.json`.
 - `status.json` – result of the last run (which URL worked, site counts, errors)
 - `sources.json` – the source list
 - `sync.py` – the sync script, also runnable locally: `python sync.py`
+- `check.py` – static health check of a config (`python check.py best.json`):
+  downloads every jar and verifies its md5, fetches every live source and
+  counts channels, probes site api/ext URLs, lists duplicate names and sites
+  that need local token files. It cannot run the spiders themselves, so a
+  site passing here can still fail to play.

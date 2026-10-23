@@ -118,10 +118,10 @@ def find_site(sites, name: str):
     return part[0] if len(part) == 1 else None
 
 
-def build_curated(cfgs: dict, picks: dict):
+def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
     """Base source's sites (minus exclude) + picked sites from other sources,
     each picked site carrying its own source's jar. Returns (cfg, warnings)."""
-    warnings = []
+    warnings, source_names = [], source_names or {}
     base = cfgs.get(picks["base"])
     if base is None:
         return None, [f"base source {picks['base']} unavailable"]
@@ -151,13 +151,22 @@ def build_curated(cfgs: dict, picks: dict):
     cfg["sites"] = sites
     live_opts = picks.get("lives", {})
     if live_opts.get("merge"):
-        lives, urls = [], set()
+        lives, urls, names = [], set(), set()
+        excl = {norm_name(n) for n in live_opts.get("exclude", [])}
         for sid in [picks["base"]] + [g["source"] for g in picks.get("picks", [])]:
             for l in (cfgs.get(sid) or {}).get("lives", []) or []:
-                u = l.get("url", "")
-                if not u or u in urls or (live_opts.get("skip_local") and "127.0.0.1" in u):
+                u, n = l.get("url", ""), l.get("name", "")
+                if not u.startswith("http") or u in urls or norm_name(n) in excl:
+                    continue
+                if live_opts.get("skip_local") and "127.0.0.1" in u:
+                    continue
+                if norm_name(n) in names:          # same name, other URL: keep the first
                     continue
                 urls.add(u)
+                names.add(norm_name(n))
+                l = dict(l)
+                if live_opts.get("prefix") and sid != picks["base"]:
+                    l["name"] = f"{source_names.get(sid, sid)}·{n}"
                 lives.append(l)
         cfg["lives"] = lives
     return cfg, warnings
@@ -208,7 +217,8 @@ def main():
 
     picks_path = os.path.join(HERE, "picks.json")
     if os.path.exists(picks_path):
-        curated, warns = build_curated(cfgs, json.load(open(picks_path, encoding="utf-8")))
+        curated, warns = build_curated(cfgs, json.load(open(picks_path, encoding="utf-8")),
+                                       {s["id"]: s["name"] for s in sources})
         status["curated"] = {"sites": len(curated["sites"]) if curated else 0, "warnings": warns}
         for w in warns:
             print(f"  curated: {w}", file=sys.stderr)
