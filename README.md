@@ -32,7 +32,6 @@ Current status after each run is in `status.json`.
 | wangerxiao | 王二小 | `https://9280.kstore.vip/newwex.json` |
 | laoliubei | 老刘备 | `https://raw.liucn.cc/box/m.json` |
 | xiaoma | 小马 | `https://szyyds.cn/tv/x.json` |
-| ouge | 讴歌 | `http://tv.nxog.top/m/` |
 | 4k | 4K小盒子 | `http://xhztv.top/4k.json` |
 | xiaohezi | 小盒子 | `http://xhztv.top/xhz` |
 | shiguang | 拾光多仓 | `http://xmbjm.fh4u.org/dc.txt` |

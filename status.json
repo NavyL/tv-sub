@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-23 18:15",
+ "updated": "2026-10-23 18:18",
  "sources": {
   "fantaiying": {
    "ok": true,
@@ -35,11 +35,6 @@
    "sites": 62,
    "lives": 10,
    "urls": 0
-  },
-  "ouge": {
-   "ok": false,
-   "error": "https://欧歌.v.nxog.top/m/: URLError: <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failur",
-   "cached": false
   },
   "4k": {
    "ok": true,
