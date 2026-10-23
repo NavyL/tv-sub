@@ -177,6 +177,19 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
                 n = f"{n}{sep}{source_names.get(sid) or source_names.get(picks['base'], picks['base'])}"
             used.add(n)
             s["name"] = n
+    if picks.get("order"):   # group order by (cleaned) name; unlisted sites keep their order at the end
+        by_name, ordered = {s["name"]: s for s in sites}, []
+        for group in picks["order"]:
+            for n in group.get("names", []):
+                s = by_name.pop(n, None)
+                if s is None:
+                    warnings.append(f"order/{group.get('group')}: no site named '{n}'")
+                else:
+                    ordered.append(s)
+        leftovers = [s for s in sites if s["name"] in by_name]
+        for s in leftovers:
+            warnings.append(f"order: '{s['name']}' not listed, placed at the end")
+        sites = ordered + leftovers
     cfg["sites"] = sites
     live_opts = picks.get("lives", {})
     if live_opts.get("merge"):
