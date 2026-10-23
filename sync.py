@@ -215,6 +215,59 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
     return cfg, warnings
 
 
+def render_status(status: dict, sources: list) -> str:
+    ok = sum(1 for s in status["sources"].values() if s.get("ok"))
+    lines = [f"> 🔄 最近变化：{status['updated']}（北京时间） · 本次成功 **{ok}/{len(sources)}** 个源", "",
+             "| id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |", "| --- | --- | --- | --- | --- | --- |"]
+    for src in sources:
+        info = status["sources"].get(src["id"], {})
+        if info.get("ok"):
+            kind = "多仓" if info.get("urls") and not info.get("sites") else ""
+            sites = f"{info.get('urls')} 个子源" if kind else str(info.get("sites", 0))
+            lines.append(f"| {src['id']} | {src['name']} | ✅ 正常 | {sites} | {info.get('lives', 0)} | `{info.get('url', '')}` |")
+        elif info.get("cached"):
+            lines.append(f"| {src['id']} | {src['name']} | 📦 缓存 | | | 本次未抓到，沿用上次成功的文件 |")
+        else:
+            err = str(info.get("error", "")).split(": ", 1)[-1][:60]
+            lines.append(f"| {src['id']} | {src['name']} | ❌ 失败 | | | {err} |")
+    return "\n".join(lines)
+
+
+def render_curated(curated: dict, picks: dict, status: dict) -> str:
+    sites, lives = curated.get("sites", []), curated.get("lives", [])
+    by_name = {s["name"]: s for s in sites}
+    lines = [f"`best.json` 当前 **{len(sites)}** 个站点、**{len(lives)}** 个直播源，按类型分块：", "",
+             "| 分块 | 数量 | 站点 |", "| --- | --- | --- |"]
+    for g in picks.get("order", []):
+        names = [n for n in g.get("names", []) if n in by_name]
+        lines.append(f"| {g.get('group')} | {len(names)} | {'，'.join(names)} |")
+    warns = status.get("curated", {}).get("warnings", [])
+    if warns:
+        lines += ["", "配方里有需要处理的条目：", ""] + [f"- {w}" for w in warns]
+    return "\n".join(lines)
+
+
+def update_readme(path: str, blocks: dict) -> bool:
+    """Replace <!-- X_START --> … <!-- X_END --> blocks. The STATUS block's first
+    line is a timestamp; ignore it when deciding whether anything changed, so a
+    run that found nothing new leaves README alone."""
+    if not os.path.exists(path):
+        return False
+    text = new = open(path, encoding="utf-8").read()
+    for key, body in blocks.items():
+        new = re.sub(rf"(<!-- {key}_START -->\n).*?(<!-- {key}_END -->)", lambda m: m.group(1) + body + "\n" + m.group(2), new, flags=re.S)
+    strip = lambda t: re.sub(r"> 🔄 最近变化：.*", "", t)
+    if strip(new) == strip(text):
+        return False
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(new)
+    return True
+
+
+def shield(label: str, message: str, color: str) -> str:
+    return dump({"schemaVersion": 1, "label": label, "message": message, "color": color})
+
+
 def write_if_changed(path: str, data: str) -> bool:
     if os.path.exists(path) and open(path, encoding="utf-8").read() == data:
         return False
@@ -274,6 +327,19 @@ def main():
     if os.path.exists(fty):
         changed |= write_if_changed(os.path.join(a.out, "tv.json"), open(fty, encoding="utf-8").read())
     write_if_changed(os.path.join(a.out, "status.json"), dump(status))
+
+    # README status blocks and badges (only rewritten when their content changes)
+    blocks = {"STATUS": render_status(status, sources)}
+    if os.path.exists(picks_path) and os.path.exists(os.path.join(a.out, "best.json")):
+        picks = json.load(open(picks_path, encoding="utf-8"))
+        curated_cfg = json.load(open(os.path.join(a.out, "best.json"), encoding="utf-8"))
+        blocks["CURATED"] = render_curated(curated_cfg, picks, status)
+        n_sites, n_lives = len(curated_cfg.get("sites", [])), len(curated_cfg.get("lives", []))
+        changed |= write_if_changed(os.path.join(a.out, "shield-best.json"),
+                                    shield("精选", f"{n_sites} 站点 · {n_lives} 直播", "blue"))
+    changed |= update_readme(os.path.join(a.out, "README.md"), blocks)
+    color = "brightgreen" if ok == len(sources) else "yellow" if ok else "red"
+    changed |= write_if_changed(os.path.join(a.out, "shield.json"), shield("配置源", f"{ok}/{len(sources)} 可用", color))
     print(f"ok={ok}/{len(sources)} multi_entries={len(multi)} changed={changed}")
     return 0 if ok else 2
 
