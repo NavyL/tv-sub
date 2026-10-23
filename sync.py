@@ -104,6 +104,65 @@ def load_source(src: dict):
     raise RuntimeError(err or "no urls")
 
 
+def norm_name(n) -> str:
+    return re.sub(r"[^0-9a-z一-鿿]", "", str(n).lower())
+
+
+def find_site(sites, name: str):
+    """Exact normalized match first, then a unique substring match."""
+    want = norm_name(name)
+    exact = [s for s in sites if norm_name(s.get("name")) == want]
+    if exact:
+        return exact[0]
+    part = [s for s in sites if want in norm_name(s.get("name"))]
+    return part[0] if len(part) == 1 else None
+
+
+def build_curated(cfgs: dict, picks: dict):
+    """Base source's sites (minus exclude) + picked sites from other sources,
+    each picked site carrying its own source's jar. Returns (cfg, warnings)."""
+    warnings = []
+    base = cfgs.get(picks["base"])
+    if base is None:
+        return None, [f"base source {picks['base']} unavailable"]
+    cfg = {k: v for k, v in base.items() if k != "sites"}
+    excl = {norm_name(n) for n in picks.get("exclude", [])}
+    sites = [dict(s) for s in base["sites"] if norm_name(s.get("name")) not in excl]
+    seen = {norm_name(s.get("name")) for s in sites}
+    for group in picks.get("picks", []):
+        sid, src = group["source"], cfgs.get(group["source"])
+        if src is None:
+            warnings.append(f"{sid}: source unavailable, its picks skipped")
+            continue
+        jar = src.get("spider", "")
+        for name in group["names"]:
+            s = find_site(src.get("sites", []), name)
+            if s is None:
+                warnings.append(f"{sid}: no unique site matches '{name}'")
+                continue
+            if norm_name(s.get("name")) in seen:
+                continue
+            s = dict(s)
+            s["key"] = f"{sid}_{s.get('key', norm_name(name))}"
+            if str(s.get("api", "")).startswith("csp_") and jar and not s.get("jar"):
+                s["jar"] = jar
+            sites.append(s)
+            seen.add(norm_name(s.get("name")))
+    cfg["sites"] = sites
+    live_opts = picks.get("lives", {})
+    if live_opts.get("merge"):
+        lives, urls = [], set()
+        for sid in [picks["base"]] + [g["source"] for g in picks.get("picks", [])]:
+            for l in (cfgs.get(sid) or {}).get("lives", []) or []:
+                u = l.get("url", "")
+                if not u or u in urls or (live_opts.get("skip_local") and "127.0.0.1" in u):
+                    continue
+                urls.add(u)
+                lives.append(l)
+        cfg["lives"] = lives
+    return cfg, warnings
+
+
 def write_if_changed(path: str, data: str) -> bool:
     if os.path.exists(path) and open(path, encoding="utf-8").read() == data:
         return False
@@ -128,7 +187,7 @@ def main():
 
     sources = json.load(open(os.path.join(HERE, "sources.json"), encoding="utf-8"))["sources"]
     now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M")
-    status, multi, changed, ok = {"updated": now, "sources": {}}, [], False, 0
+    status, multi, changed, ok, cfgs = {"updated": now, "sources": {}}, [], False, 0, {}
 
     for src in sources:
         sid, path = src["id"], os.path.join(out_dir, f"{src['id']}.json")
@@ -144,7 +203,18 @@ def main():
         status["sources"][sid] = info
         print(f"{sid:12} {'ok ' if info['ok'] else 'ERR'} {info}")
         if cfg is not None:   # 多仓 sources nest: FongMi opens them as a second-level list
+            cfgs[sid] = cfg
             multi.append({"name": src["name"], "url": f"{base}/output/{sid}.json"})
+
+    picks_path = os.path.join(HERE, "picks.json")
+    if os.path.exists(picks_path):
+        curated, warns = build_curated(cfgs, json.load(open(picks_path, encoding="utf-8")))
+        status["curated"] = {"sites": len(curated["sites"]) if curated else 0, "warnings": warns}
+        for w in warns:
+            print(f"  curated: {w}", file=sys.stderr)
+        if curated:
+            changed |= write_if_changed(os.path.join(a.out, "best.json"), dump(curated))
+            multi.insert(0, {"name": "精选", "url": f"{base}/best.json"})
 
     changed |= write_if_changed(os.path.join(a.out, "multi.json"), dump({"urls": multi}))
     fty = os.path.join(out_dir, "fantaiying.json")

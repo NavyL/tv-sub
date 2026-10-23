@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-23 18:18",
+ "updated": "2026-10-23 18:27",
  "sources": {
   "fantaiying": {
    "ok": true,
@@ -64,5 +64,9 @@
    "lives": 0,
    "urls": 32
   }
+ },
+ "curated": {
+  "sites": 123,
+  "warnings": []
  }
 }

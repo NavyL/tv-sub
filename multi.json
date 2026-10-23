@@ -1,6 +1,10 @@
 {
  "urls": [
   {
+   "name": "精选",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/best.json"
+  },
+  {
    "name": "饭太硬",
    "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/fantaiying.json"
   },

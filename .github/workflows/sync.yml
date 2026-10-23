@@ -5,7 +5,7 @@ on:
     - cron: "17 */6 * * *"     # every 6 hours (UTC)
   workflow_dispatch:
   push:
-    paths: ["sources.json", "sync.py"]
+    paths: ["sources.json", "picks.json", "sync.py"]
 
 permissions:
   contents: write
@@ -48,6 +48,6 @@ jobs:
       - name: Purge jsDelivr cache
         if: steps.commit.outputs.changed == 'true'
         run: |
-          for f in multi.json tv.json status.json output/*.json; do
+          for f in best.json multi.json tv.json status.json output/*.json; do
             curl -fsS "https://purge.jsdelivr.net/gh/$GITHUB_REPOSITORY@main/$f" -o /dev/null || true
           done
