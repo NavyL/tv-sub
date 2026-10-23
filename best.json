@@ -735,26 +735,6 @@
    "jar": "http://oss4liview.moji.com/thd_file/2026/10/20/a665408c7f44fbbd128badb05f545aad.jpg;md5;12e821fd4c608270b019feb736c469dd"
   },
   {
-   "key": "xiaohezi_csp_Nbys",
-   "name": "泥巴 · 墙外",
-   "type": 3,
-   "api": "csp_NiNi",
-   "searchable": 1,
-   "quickSearch": 1,
-   "filterable": 1,
-   "jar": "http://xhztv.top/xhz/Yoursmile.jar;md5;69DADB9A99A618EA9E2F4E2B92968E41"
-  },
-  {
-   "key": "xiaohezi_csp_trj",
-   "name": "唐人街 · 墙外",
-   "type": 3,
-   "api": "csp_Tangrenjie",
-   "searchable": 1,
-   "quickSearch": 1,
-   "filterable": 1,
-   "jar": "http://xhztv.top/xhz/Yoursmile.jar;md5;69DADB9A99A618EA9E2F4E2B92968E41"
-  },
-  {
    "key": "玩偶",
    "name": "玩偶哥哥 · 4K弹幕",
    "type": 3,
