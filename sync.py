@@ -5,17 +5,18 @@ Steps:
   1. fetch http://www.饭太硬.cc/tv (a JPEG with "**<base64>" appended)
   2. strip the image, base64-decode -> config JSON text
   3. download the spider jar, verify md5, save as spider_<md5>.jar
-  4. rewrite the "spider" field to point at this repo via jsDelivr
+  4. keep the upstream spider URL unless --spider-base is given (then the
+     field points at <spider-base>/spider_<md5>.jar, e.g. a GitHub Pages site;
+     jsDelivr refuses to serve .jar files, so the jar is not routed through it)
   5. write tv.json (and the clean JSON) only if something changed
 
-Usage: python sync.py [--repo user/name] [--branch main] [--out DIR]
+Usage: python sync.py [--spider-base URL] [--out DIR]
 Exit code 0 = ok (changed or unchanged), 2 = source unreachable (keep old files).
 """
 import argparse, base64, glob, hashlib, json, os, re, sys, urllib.request
 
 SRC = "http://www.xn--sss604efuw.cc/tv"          # www.饭太硬.cc
 UA = "okhttp/3.15"
-CDN = "https://cdn.jsdelivr.net/gh/{repo}@{branch}/{name}"
 
 
 def fetch(url, timeout=30):
@@ -32,7 +33,7 @@ def unwrap(raw: bytes) -> str:
     if i < 0:
         raise ValueError("no '**' marker in response, format changed?")
     b64 = re.sub(rb"[^A-Za-z0-9+/=]", b"", raw[i + 2:])
-    return base64.b64decode(b64 + b"=" * (-len(b64) % 4)).decode("utf-8")
+    return base64.b64decode(b64 + b"=" * (-len(b64) % 4)).decode("utf-8").replace("\r\n", "\n")
 
 
 def to_json(text: str) -> dict:
@@ -43,8 +44,8 @@ def to_json(text: str) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY", "NavyL/tv-sub"))
-    ap.add_argument("--branch", default="main")
+    ap.add_argument("--spider-base", default=os.environ.get("SPIDER_BASE", ""),
+                    help="base URL for the mirrored jar; empty keeps the upstream URL")
     ap.add_argument("--out", default=os.path.dirname(os.path.abspath(__file__)))
     a = ap.parse_args()
 
@@ -87,7 +88,8 @@ def main():
         os.remove(p)
         print(f"removed {os.path.basename(p)}")
 
-    new_spider = CDN.format(repo=a.repo, branch=a.branch, name=jar_name) + f";md5;{md5}"
+    base = a.spider_base.rstrip("/")
+    new_spider = f"{base}/{jar_name};md5;{md5}" if base else spider
     # rewrite only the spider value, keep author's comments/layout intact
     out_text, n = re.subn(r'("spider"\s*:\s*")[^"]*(")', lambda m: m.group(1) + new_spider + m.group(2), text, count=1)
     if n != 1:
