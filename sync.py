@@ -118,6 +118,24 @@ def find_site(sites, name: str):
     return part[0] if len(part) == 1 else None
 
 
+NAME_SEPARATORS = "┃|丨｜[]()（）【】<>/:：、,，"
+
+
+def clean_name(name: str, opts: dict) -> str:
+    """'🍅┃番茄┃APP' -> '番茄', '👽玩偶哥哥┃4K弹幕' -> '玩偶哥哥 · 4K弹幕'.
+    Emoji and decoration go, tokens in opts['drop'] go, the first token is the
+    name and the rest become one tag after opts['separator']."""
+    text = re.sub(f"[{re.escape(NAME_SEPARATORS)}]", " ", str(name))
+    text = re.sub(r"[^0-9A-Za-z一-鿿 ]", "", text)        # strips emoji, VS16, ZWJ …
+    drop = {t.lower() for t in opts.get("drop", [])}
+    tokens = [t for t in text.split() if t.lower() not in drop]
+    if not tokens:
+        return str(name)
+    head, tags = tokens[0], [t for t in tokens[1:] if t not in tokens[0]]
+    sep = opts.get("separator", " · ")
+    return head + (sep + " ".join(tags) if tags else "")
+
+
 def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
     """Base source's sites (minus exclude) + picked sites from other sources,
     each picked site carrying its own source's jar. Returns (cfg, warnings)."""
@@ -148,6 +166,17 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
                 s["jar"] = jar
             sites.append(s)
             seen.add(norm_name(s.get("name")))
+    name_opts = picks.get("names")
+    if name_opts is not None:
+        sep, rename, used = name_opts.get("separator", " · "), name_opts.get("rename", {}), set()
+        for s in sites:
+            n = clean_name(s.get("name", ""), name_opts)
+            n = rename.get(n, n)
+            if n in used:   # same cleaned name from another source: tag it with the source
+                sid = str(s.get("key", "")).split("_", 1)[0]
+                n = f"{n}{sep}{source_names.get(sid) or source_names.get(picks['base'], picks['base'])}"
+            used.add(n)
+            s["name"] = n
     cfg["sites"] = sites
     live_opts = picks.get("lives", {})
     if live_opts.get("merge"):
@@ -166,7 +195,8 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
                 names.add(norm_name(n))
                 l = dict(l)
                 if live_opts.get("prefix") and sid != picks["base"]:
-                    l["name"] = f"{source_names.get(sid, sid)}·{n}"
+                    sep = (picks.get("names") or {}).get("separator", " · ")
+                    l["name"] = f"{source_names.get(sid, sid)}{sep}{n}"
                 lives.append(l)
         cfg["lives"] = lives
     return cfg, warnings
