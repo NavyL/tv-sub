@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: "17 */6 * * *"     # every 6 hours (UTC)
   workflow_dispatch:
+  push:
+    paths: ["sources.json", "sync.py"]
 
 permissions:
   contents: write
@@ -22,11 +24,9 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Fetch and decode upstream
+      - name: Fetch and decode upstream sources
         id: sync
         run: python sync.py
-        env:
-          SPIDER_BASE: ${{ vars.SPIDER_BASE }}
         continue-on-error: true
 
       - name: Commit if changed
@@ -48,6 +48,6 @@ jobs:
       - name: Purge jsDelivr cache
         if: steps.commit.outputs.changed == 'true'
         run: |
-          for f in tv.json tv.clean.json; do
-            curl -fsS "https://purge.jsdelivr.net/gh/$GITHUB_REPOSITORY@main/$f" || true
+          for f in multi.json tv.json status.json output/*.json; do
+            curl -fsS "https://purge.jsdelivr.net/gh/$GITHUB_REPOSITORY@main/$f" -o /dev/null || true
           done

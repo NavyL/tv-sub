@@ -1,0 +1,40 @@
+{
+ "urls": [
+  {
+   "name": "饭太硬",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/fantaiying.json"
+  },
+  {
+   "name": "肥猫",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/feimao.json"
+  },
+  {
+   "name": "王二小",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/wangerxiao.json"
+  },
+  {
+   "name": "老刘备",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/laoliubei.json"
+  },
+  {
+   "name": "小马",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/xiaoma.json"
+  },
+  {
+   "name": "4K小盒子",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/4k.json"
+  },
+  {
+   "name": "小盒子",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/xiaohezi.json"
+  },
+  {
+   "name": "拾光多仓",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/shiguang.json"
+  },
+  {
+   "name": "挺好分享多仓",
+   "url": "https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/tinghao.json"
+  }
+ ]
+}

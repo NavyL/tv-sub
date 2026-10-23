@@ -1,0 +1,73 @@
+{
+ "updated": "2026-10-23 18:15",
+ "sources": {
+  "fantaiying": {
+   "ok": true,
+   "url": "http://www.饭太硬.cc/tv",
+   "sites": 49,
+   "lives": 6,
+   "urls": 0
+  },
+  "feimao": {
+   "ok": true,
+   "url": "http://肥猫.net/tv",
+   "sites": 40,
+   "lives": 1,
+   "urls": 0
+  },
+  "wangerxiao": {
+   "ok": true,
+   "url": "https://9280.kstore.vip/newwex.json",
+   "sites": 99,
+   "lives": 2,
+   "urls": 0
+  },
+  "laoliubei": {
+   "ok": true,
+   "url": "https://raw.liucn.cc/box/m.json",
+   "sites": 234,
+   "lives": 3,
+   "urls": 0
+  },
+  "xiaoma": {
+   "ok": true,
+   "url": "https://szyyds.cn/tv/x.json",
+   "sites": 62,
+   "lives": 10,
+   "urls": 0
+  },
+  "ouge": {
+   "ok": false,
+   "error": "https://欧歌.v.nxog.top/m/: URLError: <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failur",
+   "cached": false
+  },
+  "4k": {
+   "ok": true,
+   "url": "http://xhztv.top/4k.json",
+   "sites": 53,
+   "lives": 2,
+   "urls": 0
+  },
+  "xiaohezi": {
+   "ok": true,
+   "url": "http://xhztv.top/xhz",
+   "sites": 54,
+   "lives": 1,
+   "urls": 0
+  },
+  "shiguang": {
+   "ok": true,
+   "url": "http://xmbjm.fh4u.org/dc.txt",
+   "sites": 0,
+   "lives": 0,
+   "urls": 54
+  },
+  "tinghao": {
+   "ok": true,
+   "url": "http://ztha.top/TVBox/GYCK.json",
+   "sites": 0,
+   "lives": 0,
+   "urls": 32
+  }
+ }
+}
