@@ -199,6 +199,14 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
         for s in leftovers:
             warnings.append(f"order: '{s['name']}' not listed, placed at the end")
         sites = ordered + leftovers
+    for n, fields in (picks.get("overrides") or {}).items():   # per-site field overrides by cleaned name
+        if n.startswith("_"):
+            continue
+        hit = [s for s in sites if s["name"] == n]
+        if not hit:
+            warnings.append(f"overrides: no site named '{n}'")
+        for s in hit:
+            s.update(fields)
     cfg["sites"] = sites
     live_opts = picks.get("lives", {})
     if live_opts.get("merge"):
