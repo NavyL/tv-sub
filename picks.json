@@ -213,6 +213,15 @@
         "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
         "logo": "https://live.fanmingming.cn/tv/{name}.png",
         "_doc": "fanmingming 的北京移动 IPv6 组播转发（2409:8087），只在移动宽带下能播"
+      },
+      {
+        "name": "江苏移动 · IPTV",
+        "type": 0,
+        "url": "https://navyl.github.io/tv-sub/live/jsyd.txt",
+        "playerType": 2,
+        "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
+        "logo": "https://live.fanmingming.cn/tv/{name}.png",
+        "_doc": "lives.py 从 live/jsyd-source.m3u 生成；只在移动宽带下能播"
       }
     ],
     "only_extra": true

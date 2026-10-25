@@ -30,7 +30,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 二、源可用性状态
 
 <!-- STATUS_START -->
-> 🔄 最近变化：2026-10-25 18:53（北京时间） · 本次成功 **9/9** 个源
+> 🔄 最近变化：2026-10-25 18:59（北京时间） · 本次成功 **9/9** 个源
 
 | id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |
 | --- | --- | --- | --- | --- | --- |
@@ -50,7 +50,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 三、精选单仓
 
 <!-- CURATED_START -->
-`best.json` 当前 **33** 个站点、**3** 个直播源，按类型分块：
+`best.json` 当前 **33** 个站点、**4** 个直播源，按类型分块：
 
 | 分块 | 数量 | 站点 |
 | --- | --- | --- |
@@ -74,6 +74,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
   - `上海联通 · IPTV`：运营商 IPTV 单播流（`live/shlt-source.m3u`，10.223.x.x 内网地址），无广告、全高清带 4K，只有上海联通宽带能播。分组：央视 / 卫视 / 4K / 上海 / 影视少儿。
   - `光影 · 直播`：合并 综合直播、Kimentanm、ssili126、vbskycn，只留 央视 / 卫视 / 4K / 港台 四组，线路按 `host_priority` 排序，`blacklist` 里插广告的中转直接丢掉。
   - `光影 · 移动IPv6`：fanmingming 的北京移动 IPv6 组播转发，只在移动宽带下能播。
+  - `江苏移动 · IPTV`：江苏移动 OTT 列表（`live/jsyd-source.m3u`，ott.mobaibox.com），同样只在移动宽带下能播。
   三个条目都带台标（fanmingming）和 EPG（112114）。
 
 要删站、改名或调顺序，改 `picks.json` 推送即可，工作流会自动重新生成。

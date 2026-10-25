@@ -45,6 +45,14 @@
    "playerType": 2,
    "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
    "logo": "https://live.fanmingming.cn/tv/{name}.png"
+  },
+  {
+   "name": "江苏移动 · IPTV",
+   "type": 0,
+   "url": "https://navyl.github.io/tv-sub/live/jsyd.txt",
+   "playerType": 2,
+   "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
+   "logo": "https://live.fanmingming.cn/tv/{name}.png"
   }
  ],
  "wallpaper": "https://navyl.github.io/tv-sub/wallpaper/3.webp",
