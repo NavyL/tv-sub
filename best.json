@@ -26,7 +26,7 @@
    "name": "上海联通 · IPTV",
    "type": 0,
    "url": "https://navyl.github.io/tv-sub/live/shlt.txt",
-   "playerType": 2,
+   "playerType": 1,
    "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
    "logo": "https://live.fanmingming.cn/tv/{name}.png"
   },
