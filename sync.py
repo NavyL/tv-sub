@@ -144,8 +144,17 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
     if base is None:
         return None, [f"base source {picks['base']} unavailable"]
     cfg = {k: v for k, v in base.items() if k != "sites"}
-    excl = {norm_name(n) for n in picks.get("exclude", [])}
-    sites = [dict(s) for s in base["sites"] if norm_name(s.get("name")) not in excl]
+    if picks.get("base_names"):   # explicit keep-list for the base source, in list order
+        sites = []
+        for name in picks["base_names"]:
+            s = find_site(base["sites"], name)
+            if s is None:
+                warnings.append(f"{picks['base']}: no unique site matches '{name}'")
+            elif all(s is not t for t in sites):
+                sites.append(dict(s))
+    else:                         # legacy: everything minus exclude
+        excl = {norm_name(n) for n in picks.get("exclude", [])}
+        sites = [dict(s) for s in base["sites"] if norm_name(s.get("name")) not in excl]
     seen = {norm_name(s.get("name")) for s in sites}
     for group in picks.get("picks", []):
         sid, src = group["source"], cfgs.get(group["source"])
