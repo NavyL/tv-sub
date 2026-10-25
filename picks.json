@@ -204,6 +204,14 @@
         "_doc": "lives.py 从 live/jsyd-source.m3u 生成；只在移动宽带下能播"
       },
       {
+        "name": "上海移动 · IPTV",
+        "type": 0,
+        "url": "https://navyl.github.io/tv-sub/live/shcm.txt",
+        "epg": "https://navyl.github.io/tv-sub/live/epg.xml.gz,http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+        "logo": "https://navyl.github.io/tv-sub/logo/{name}.png",
+        "_doc": "lives.py 合并 fanjunjia/SH_CMCC_IPTV 与 kiwi5656/CMSH.IPTV；只在上海移动宽带下能播"
+      },
+      {
         "name": "光影 · 直播",
         "type": 0,
         "url": "https://navyl.github.io/tv-sub/live/live.txt",

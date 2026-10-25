@@ -1,5 +1,5 @@
 {
-  "_doc": "lives.py 的配方：把公开直播列表合并成光影用的精简列表。只要 央视/卫视/4K/港台 四组；同一频道的线路按 host_priority 排序，命中 blacklist 的线路（插广告的中转）直接丢弃；host_priority_low 里的排到最后。 rules.rename 统一个别名字，rules.drop 直接丢掉，rules.extra_groups 按名单归到额外分组（只有 outputs 里声明了该组的输出会用到）。",
+  "_doc": "lives.py 的配方：把公开直播列表合并成光影用的精简列表。只要 央视/卫视/4K/港台 四组；同一频道的线路按 host_priority 排序，命中 blacklist 的线路（插广告的中转）直接丢弃；host_priority_low 里的排到最后。 rules.rename 统一个别名字，rules.drop 直接丢掉，rules.extra_groups 按名单归到额外分组（只有 outputs 里声明了该组的输出会用到）。 带 url 的来源每次运行都重新抓（跟踪上游仓库），抓不到时回退到 file 里的副本。",
   "sources": [
     {
       "id": "zonghe",
@@ -46,6 +46,27 @@
       "url": "https://raw.githubusercontent.com/hxchtiewei/sh-iptv/main/LT.m3u",
       "file": "live/shlt2-source.m3u",
       "_doc": "github.com/hxchtiewei/sh-iptv 的上海联通单播列表（2026-08 抓的另一套 token，59 条，2026-10-25 实测仍可用），作为同一频道的备用线路合并进 shlt.txt。"
+    },
+    {
+      "id": "shcm1",
+      "name": "上海移动 IPTV（fanjunjia）",
+      "url": "https://raw.githubusercontent.com/fanjunjia/SH_CMCC_IPTV/main/SH_CMCC_IPTV.m3u",
+      "file": "live/shcm1-source.m3u",
+      "_doc": "github.com/fanjunjia/SH_CMCC_IPTV，2026-05-15 抓包，189 条，iptvrr.sh.chinamobile.com:6060 无 token；只有上海移动宽带能播（联通线上超时）。"
+    },
+    {
+      "id": "shcm2",
+      "name": "上海移动 IPTV（kiwi5656）",
+      "url": "https://raw.githubusercontent.com/kiwi5656/CMSH.IPTV/main/ShanghaiCM.m3u",
+      "file": "live/shcm2-source.m3u",
+      "_doc": "github.com/kiwi5656/CMSH.IPTV 的 ShanghaiCM.m3u，2026-09 更新，188 条，同一平台带分组。"
+    },
+    {
+      "id": "shcm3",
+      "name": "上海移动 IPTV（kiwi5656 中转）",
+      "url": "https://raw.githubusercontent.com/kiwi5656/CMSH.IPTV/main/Shanghai%20CM%20IPTV.m3u8",
+      "file": "live/shcm3-source.m3u",
+      "_doc": "同仓库的另一份，70 条走 39.134.87.62 单播，作为同频道的备用线路。"
     }
   ],
   "outputs": [
@@ -55,6 +76,22 @@
       "sources": [
         "shlt",
         "shlt2"
+      ],
+      "groups": [
+        "央视",
+        "卫视",
+        "4K",
+        "上海",
+        "影视少儿"
+      ]
+    },
+    {
+      "file": "shcm.txt",
+      "_doc": "上海移动 IPTV：三份列表合并，同频道多线路；只在上海移动宽带下能播",
+      "sources": [
+        "shcm2",
+        "shcm1",
+        "shcm3"
       ],
       "groups": [
         "央视",

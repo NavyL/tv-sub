@@ -30,7 +30,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 二、源可用性状态
 
 <!-- STATUS_START -->
-> 🔄 最近变化：2026-10-25 18:59（北京时间） · 本次成功 **9/9** 个源
+> 🔄 最近变化：2026-10-25 20:04（北京时间） · 本次成功 **9/9** 个源
 
 | id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |
 | --- | --- | --- | --- | --- | --- |
@@ -50,7 +50,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 三、精选单仓
 
 <!-- CURATED_START -->
-`best.json` 当前 **33** 个站点、**4** 个直播源，按类型分块：
+`best.json` 当前 **33** 个站点、**5** 个直播源，按类型分块：
 
 | 分块 | 数量 | 站点 |
 | --- | --- | --- |
@@ -74,7 +74,9 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
   - `上海联通 · IPTV`：运营商 IPTV 单播流（`live/shlt-source.m3u` 加 hxchtiewei/sh-iptv 的第二套 token 作备用线路，10.223.x.x 内网地址），无广告、全高清带 4K，只有上海联通宽带能播。分组：央视 / 卫视 / 4K / 上海 / 影视少儿。
   - `光影 · 直播`：合并 综合直播、Kimentanm、ssili126、vbskycn，只留 央视 / 卫视 / 4K / 港台 四组，线路按 `host_priority` 排序，`blacklist` 里插广告的中转直接丢掉。
   - `光影 · 移动IPv6`：fanmingming 的北京移动 IPv6 组播转发，只在移动宽带下能播。
-  - `江苏移动 · IPTV`：江苏移动 OTT 列表（`live/jsyd-source.m3u`，ott.mobaibox.com），同样只在移动宽带下能播。
+  - `江苏移动 · IPTV`：江苏移动 OTT 列表（cicivi/jsyd-iptv，ott.mobaibox.com），只在移动宽带下能播。
+  - `上海移动 · IPTV`：fanjunjia/SH_CMCC_IPTV 与 kiwi5656/CMSH.IPTV 合并（iptvrr.sh.chinamobile.com），只在上海移动宽带下能播。
+  上面引用的 GitHub 仓库每次运行都重新抓取（跟踪上游更新），抓不到时用仓库里的副本。
   所有直播条目都带台标和节目单：台标镜像在仓库 `logo/`（来自 cicivi/jsyd-iptv 与 fanmingming/live，按频道名取 `logo/{name}.png`；`logos.py` 每次运行会为新出现、还没有台标的频道自动补图并入库），节目单主用仓库自己生成的 `live/epg.xml.gz`（`epg.py` 把 fanmingming、51zmt 的 xmltv 按我们的频道名重排，每次工作流运行重建并发到 Pages，不入库），51zmt 的接口做兜底；两者在 `epg` 字段里用逗号并列，FongMi 先用 xml 再查接口。
 
 要删站、改名或调顺序，改 `picks.json` 推送即可，工作流会自动重新生成。

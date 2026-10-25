@@ -67,8 +67,8 @@ def canon(raw: str, rules: dict):
     m = re.match(r"^CCTV-?(\d{1,2})(\+)?(.*)$", up)
     if m:
         num, plus, rest = m.group(1), m.group(2) or "", m.group(3)
-        if re.search(r"4K|8K", rest):
-            return "4K", f"CCTV{num}{plus} 4K" if "4K" in rest else f"CCTV{num}{plus} 8K"
+        if re.search(r"4K|8K|UHD", rest):
+            return "4K", f"CCTV{num}{plus} 8K" if "8K" in rest else f"CCTV{num}{plus} 4K"
         if num == "4" and re.search(r"欧洲|美洲", rest):
             return None
         if int(num) < 1 or int(num) > 17:
