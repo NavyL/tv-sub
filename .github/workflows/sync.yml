@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: sync
@@ -17,6 +19,9 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -53,3 +58,24 @@ jobs:
           for f in best.json multi.json tv.json status.json output/*.json; do
             curl -fsS "https://purge.jsdelivr.net/gh/$GITHUB_REPOSITORY@main/$f" -o /dev/null || true
           done
+
+      # GitHub Pages copy: same files, refreshed within ~10 minutes of a change (jsDelivr @main lags for hours).
+      - name: Build Pages site
+        if: steps.commit.outputs.changed == 'true' || github.event_name != 'schedule'
+        run: |
+          owner="${GITHUB_REPOSITORY%%/*}"; repo="${GITHUB_REPOSITORY#*/}"
+          pages="https://${owner,,}.github.io/${repo}"
+          rm -rf site && mkdir -p site/output
+          cp best.json tv.json status.json shield.json shield-best.json site/
+          cp output/*.json site/output/
+          sed "s#https://cdn.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main#${pages}#g" multi.json > site/multi.json
+          printf '<!doctype html><meta charset="utf-8"><title>tv-sub</title><p><a href="best.json">best.json</a> · <a href="multi.json">multi.json</a> · <a href="tv.json">tv.json</a> · <a href="status.json">status.json</a>' > site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.commit.outputs.changed == 'true' || github.event_name != 'schedule'
+        with:
+          path: site
+
+      - uses: actions/deploy-pages@v4
+        if: steps.commit.outputs.changed == 'true' || github.event_name != 'schedule'
+        id: pages

@@ -19,14 +19,13 @@
 
 | 类型 | 地址 | 说明 |
 | --- | --- | --- |
-| **精选单仓（推荐）** | `https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/best.json` | 一个列表用全部，名称统一，按类型分块 |
-| 多仓订阅 | `https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/multi.json` | App 内可在精选和各源之间切换 |
-| 饭太硬原版 | `https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/tv.json` | 与原站内容一致，只换了地址 |
-| 单个源 | `https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/output/<id>.json` | `<id>` 见下方状态表 |
+| **精选单仓（推荐）** | `https://navyl.github.io/tv-sub/best.json` | 一个列表用全部，名称统一，按类型分块；GitHub Pages，更新后 10 分钟内生效 |
+| 多仓订阅 | `https://navyl.github.io/tv-sub/multi.json` | App 内可在精选和各源之间切换 |
+| 饭太硬原版 | `https://navyl.github.io/tv-sub/tv.json` | 与原站内容一致，只换了地址 |
+| 单个源 | `https://navyl.github.io/tv-sub/output/<id>.json` | `<id>` 见下方状态表 |
+| 备用（jsDelivr） | `https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/best.json` 等，路径同上 | `github.io` 不通时用；分支缓存最长 24 小时才刷新 |
 
-`cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gcore.jsdelivr.net`，路径相同。
-
-> jsDelivr 对 `@main` 分支地址有缓存，推送后最长 24 小时才会换成新内容。想立刻拿到最新版，可以用按提交固定的地址 `…/gh/NavyL/tv-sub@<commit>/best.json`。
+jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gcore.jsdelivr.net`，路径相同。想立刻拿到某个提交的内容，可以用按提交固定的地址 `…/gh/NavyL/tv-sub@<commit>/best.json`。
 
 ## 二、源可用性状态
 
