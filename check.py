@@ -80,7 +80,12 @@ def main():
         n = len(re.findall(r"^#EXTINF", text, flags=re.M)) or len(re.findall(r"^[^#\s].*?,\s*\S+://", text, flags=re.M))
         if n == 0 and "{" in text[:200]:
             return l.get("name"), f"WARN json/other response ({len(body)} bytes)"
-        return l.get("name"), (f"ok {n} channels" if n else f"WARN no channels found ({len(body)} bytes, {ct[:30]})")
+        msg = f"ok {n} channels" if n else f"WARN no channels found ({len(body)} bytes, {ct[:30]})"
+        for epg in str(l.get("epg", "")).split(","):          # static xmltv files (api templates with {name} are not probed)
+            if epg.startswith("http") and "{" not in epg and ("xml" in epg or "gz" in epg):
+                st2, body2, _, err2 = check_url(epg, a.timeout)
+                msg += f"; epg {'FAIL ' + err2 if err2 else 'ok ' + str(len(body2)//1024) + ' KB'}"
+        return l.get("name"), msg
 
     # --- site urls ---
     url_tasks = []

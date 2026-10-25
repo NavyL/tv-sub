@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 probe.json
 live/epg.xml.gz
+site/
