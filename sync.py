@@ -222,7 +222,7 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
                 u, n = l.get("url", ""), l.get("name", "")
                 if not u.startswith("http") or u in urls or norm_name(n) in excl:
                     continue
-                if live_opts.get("skip_local") and "127.0.0.1" in u:
+                if live_opts.get("skip_local") and "127.0.0.1" in u and norm_name(n) not in {norm_name(x) for x in live_opts.get("allow_local", [])}:
                     continue
                 if norm_name(n) in names:          # same name, other URL: keep the first
                     continue
