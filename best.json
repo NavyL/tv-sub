@@ -26,28 +26,28 @@
    "name": "上海联通 · IPTV",
    "type": 0,
    "url": "https://navyl.github.io/tv-sub/live/shlt.txt",
-   "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+   "epg": "https://navyl.github.io/tv-sub/live/epg.xml.gz,http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
    "logo": "https://navyl.github.io/tv-sub/logo/{name}.png"
   },
   {
    "name": "光影 · 直播",
    "type": 0,
    "url": "https://navyl.github.io/tv-sub/live/live.txt",
-   "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+   "epg": "https://navyl.github.io/tv-sub/live/epg.xml.gz,http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
    "logo": "https://navyl.github.io/tv-sub/logo/{name}.png"
   },
   {
    "name": "光影 · 移动IPv6",
    "type": 0,
    "url": "https://navyl.github.io/tv-sub/live/live-mobile.txt",
-   "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+   "epg": "https://navyl.github.io/tv-sub/live/epg.xml.gz,http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
    "logo": "https://navyl.github.io/tv-sub/logo/{name}.png"
   },
   {
    "name": "江苏移动 · IPTV",
    "type": 0,
    "url": "https://navyl.github.io/tv-sub/live/jsyd.txt",
-   "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+   "epg": "https://navyl.github.io/tv-sub/live/epg.xml.gz,http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
    "logo": "https://navyl.github.io/tv-sub/logo/{name}.png"
   }
  ],

@@ -5,7 +5,7 @@ on:
     - cron: "17 */6 * * *"     # every 6 hours (UTC)
   workflow_dispatch:
   push:
-    paths: ["sources.json", "picks.json", "sync.py", "lives.json", "lives.py", ".github/workflows/sync.yml"]
+    paths: ["sources.json", "picks.json", "sync.py", "lives.json", "lives.py", "epg.py", ".github/workflows/sync.yml"]
 
 permissions:
   contents: write
@@ -63,9 +63,14 @@ jobs:
             curl -fsS "https://purge.jsdelivr.net/gh/$GITHUB_REPOSITORY@main/$f" -o /dev/null || true
           done
 
+      # EPG for the live lists: rebuilt on every run (not committed), so Pages always carries fresh programme data.
+      - name: Build EPG
+        run: python epg.py
+        continue-on-error: true
+
       # GitHub Pages copy: same files, refreshed within ~10 minutes of a change (jsDelivr @main lags for hours).
+      # Deployed on every run so the EPG stays fresh even when nothing else changed.
       - name: Build Pages site
-        if: steps.commit.outputs.changed == 'true' || github.event_name != 'schedule'
         run: |
           owner="${GITHUB_REPOSITORY%%/*}"; repo="${GITHUB_REPOSITORY#*/}"
           pages="https://${owner,,}.github.io/${repo}"
@@ -74,15 +79,14 @@ jobs:
           cp output/*.json site/output/
           [ -d wallpaper ] && cp -r wallpaper site/
           mkdir -p site/live && cp live/*.txt site/live/
+          [ -f live/epg.xml.gz ] && cp live/epg.xml.gz site/live/
           [ -d logo ] && cp -r logo site/
           sed "s#https://cdn.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main#${pages}#g" multi.json > site/multi.json
           printf '<!doctype html><meta charset="utf-8"><title>tv-sub</title><p><a href="best.json">best.json</a> · <a href="multi.json">multi.json</a> · <a href="tv.json">tv.json</a> · <a href="status.json">status.json</a>' > site/index.html
 
       - uses: actions/upload-pages-artifact@v3
-        if: steps.commit.outputs.changed == 'true' || github.event_name != 'schedule'
         with:
           path: site
 
       - uses: actions/deploy-pages@v4
-        if: steps.commit.outputs.changed == 'true' || github.event_name != 'schedule'
         id: pages
