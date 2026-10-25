@@ -82,17 +82,14 @@
    "changeable": 0
   },
   {
-   "key": "玩偶",
-   "name": "玩偶哥哥 · 4K弹幕",
+   "key": "wangerxiao_玩偶",
+   "name": "玩偶哥哥 · 4K",
    "type": 3,
-   "api": "csp_WoGGGuard",
-   "timeout": 30,
+   "api": "csp_AiNewWoggGuard",
    "searchable": 1,
    "quickSearch": 1,
-   "changeable": 1,
-   "ext": {
-    "Cloud-drive": "tvfan/Cloud-drive.txt"
-   }
+   "changeable": 0,
+   "jar": "http://oss4liview.moji.com/thd_file/2026/10/23/b1a69d9c535fd309388e390b0b1e0749.jpg;md5;3c264c629e02273b9ad61e769218c508"
   },
   {
    "key": "奶酪",
@@ -451,6 +448,19 @@
    "ext": {
     "Cloud-drive": "tvfan/Cloud-drive.txt"
    }
+  },
+  {
+   "key": "wangerxiao_MyPan",
+   "name": "王二小网盘登录",
+   "type": 3,
+   "api": "csp_MyPanGuard",
+   "searchable": 0,
+   "changeable": 0,
+   "indexs": 0,
+   "style": {
+    "type": "list"
+   },
+   "jar": "http://oss4liview.moji.com/thd_file/2026/10/23/b1a69d9c535fd309388e390b0b1e0749.jpg;md5;3c264c629e02273b9ad61e769218c508"
   },
   {
    "key": "push_agent",
