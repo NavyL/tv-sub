@@ -450,10 +450,10 @@
    }
   },
   {
-   "key": "wangerxiao_MyPan",
+   "key": "wangerxiao_Wexconfig",
    "name": "王二小网盘登录",
    "type": 3,
-   "api": "csp_MyPanGuard",
+   "api": "csp_PanConfigGuard",
    "searchable": 0,
    "changeable": 0,
    "indexs": 0,
