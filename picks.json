@@ -5,6 +5,17 @@
     "wallpaper"
   ],
   "_drop_keys_doc": "从底本配置里去掉的顶层字段。wallpaper 是饭太硬的“动态壁纸”（一个 302 到搜狗图床随机图的地址），会盖掉光影自带的壁纸，而且依赖三个第三方域名；去掉后首页用光影内置壁纸，用户仍可在设置里自己填壁纸地址。2026-10-25。",
+  "wallpaper": {
+    "base": "https://navyl.github.io/tv-sub",
+    "files": [
+      "wallpaper/1.webp",
+      "wallpaper/2.webp",
+      "wallpaper/3.webp",
+      "wallpaper/4.webp"
+    ],
+    "rotate": "daily"
+  },
+  "_wallpaper_doc": "用光影自带的四张壁纸替代饭太硬的动态壁纸：按日期轮换（每天换一张），地址指向 Pages 上的 wallpaper/N.webp。用户要求 2026-10-25。",
   "base_names": [
     "豆豆片单",
     "厂长不卡",

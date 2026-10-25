@@ -144,6 +144,11 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
     if base is None:
         return None, [f"base source {picks['base']} unavailable"]
     cfg = {k: v for k, v in base.items() if k != "sites" and k not in (picks.get("drop_keys") or [])}
+    wp = picks.get("wallpaper")
+    if wp and wp.get("files"):   # our own wallpapers, one per day (the app re-reads the config on start)
+        files = wp["files"]
+        idx = datetime.date.today().toordinal() % len(files) if wp.get("rotate") == "daily" else 0
+        cfg["wallpaper"] = f"{wp['base'].rstrip('/')}/{files[idx]}"
     if picks.get("base_names"):   # explicit keep-list for the base source, in list order
         sites = []
         for name in picks["base_names"]:
