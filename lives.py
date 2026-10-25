@@ -26,26 +26,31 @@ def fetch(url: str, ua: str = UA, timeout: int = 25) -> str:
 
 
 def parse_list(text: str):
-    """Yield (name, url) from m3u or txt (name,url#url) lists."""
-    name = None
+    """Yield (name, url, source_group) from m3u or txt (name,url#url) lists."""
+    name, group = None, ""
     for line in text.splitlines():
         line = line.strip()
         if not line:
             continue
         if line.startswith("#EXTINF"):
             name = line.rsplit(",", 1)[-1].strip()
+            m = re.search(r'group-title="([^"]*)"', line)
+            group = m.group(1) if m else ""
             continue
-        if line.startswith("#") or line.endswith("#genre#"):
+        if line.endswith("#genre#"):
+            group = line.split(",", 1)[0].strip()
+            continue
+        if line.startswith("#"):
             continue
         if line.startswith("http") and name:
-            yield name, line
+            yield name, line, group
             name = None
         elif "," in line and "http" in line:
             n, urls = line.split(",", 1)
             for u in urls.split("#"):
                 u = u.strip()
                 if u.startswith("http"):
-                    yield n.strip(), u
+                    yield n.strip(), u, group
 
 
 CCTV_DIGITAL = ("兵器科技", "风云音乐", "怀旧剧场", "第一剧场", "风云剧场", "风云足球", "世界地理",
@@ -55,6 +60,7 @@ CCTV_DIGITAL = ("兵器科技", "风云音乐", "怀旧剧场", "第一剧场", 
 def canon(raw: str, rules: dict):
     """Return (group, display_name) or None when the channel is not wanted."""
     n = re.sub(r"[\s　]", "", raw)
+    n = re.sub(r"(?i)(MAX)?[\d.]+M(1080|2160|720)P?$", "", n)      # bitrate tags like "Max4.5M1080"
     n = re.sub(r"(?i)(ipv[46]|高清|超清|标清|hd|fhd|蓝光|频道)$", "", n)
     n = n.replace("—", "-").replace("－", "-").replace("＋", "+").strip("-·")
     n = rules.get("rename", {}).get(n, n)
@@ -162,9 +168,12 @@ def build(output: dict, recipe: dict, src_text: dict):
         text = src_text.get(sid)
         if not text:
             continue
-        for raw, url in parse_list(text):
+        src_groups = output.get("source_groups") or {}       # upstream group name -> our group, for local channels
+        for raw, url, sgroup in parse_list(text):
             c = canon(raw, rules)
-            if not c or c[0] not in groups or url in seen or ";" in url:
+            if not c and sgroup in src_groups:
+                c = (src_groups[sgroup], re.sub(r"[\s　]", "", raw))
+            if not c or c[0] not in groups or url in seen or ";" in url or "*" in url:
                 continue
             rank = host_rank(url, prio, low, black)
             if rank is None:

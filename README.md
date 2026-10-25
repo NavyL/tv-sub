@@ -23,7 +23,7 @@
 | 类型 | 地址 | 说明 |
 | --- | --- | --- |
 | **精选单仓（推荐）** | `https://navyl.github.io/tv-sub/best.json` | 一个列表用全部，名称统一，按类型分块，自带五个直播源；GitHub Pages，更新后 10 分钟内生效 |
-| 多仓订阅 | `https://navyl.github.io/tv-sub/multi.json` | App 内可在精选和各源之间切换 |
+| 多仓索引 | `https://navyl.github.io/tv-sub/multi.json` | 精选在前、各源在后。影视仓等支持仓库选择的 App 可在其中切换；FongMi 5.8 只加载第一条（精选） |
 | 饭太硬原版 | `https://navyl.github.io/tv-sub/tv.json` | 与原站内容一致，只换了地址 |
 | 单个源 | `https://navyl.github.io/tv-sub/output/<id>.json` | `<id>` 见下方状态表 |
 | 备用（jsDelivr） | `https://cdn.jsdelivr.net/gh/NavyL/tv-sub@main/best.json` 等，路径同上 | `github.io` 不通时用；分支缓存最长 24 小时才刷新 |
@@ -35,6 +35,7 @@
 | 上海联通 · IPTV | `https://navyl.github.io/tv-sub/live/shlt.txt` | 上海联通宽带 |
 | 江苏移动 · IPTV | `https://navyl.github.io/tv-sub/live/jsyd.txt` | 江苏移动宽带 |
 | 上海移动 · IPTV | `https://navyl.github.io/tv-sub/live/shcm.txt` | 上海移动宽带 |
+| 浙江移动 · IPTV | `https://navyl.github.io/tv-sub/live/zjyd.txt` | 浙江移动宽带 |
 | 光影 · 直播 | `https://navyl.github.io/tv-sub/live/live.txt` | 任何网络 |
 | 光影 · 移动IPv6 | `https://navyl.github.io/tv-sub/live/live-mobile.txt` | 移动宽带（IPv6） |
 | 节目单 | `https://navyl.github.io/tv-sub/live/epg.xml.gz` | xmltv，按上面列表的频道名命名 |
@@ -45,7 +46,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 二、源可用性状态
 
 <!-- STATUS_START -->
-> 🔄 最近变化：2026-10-25 20:04（北京时间） · 本次成功 **9/9** 个源
+> 🔄 最近变化：2026-10-25 20:34（北京时间） · 本次成功 **9/9** 个源
 
 | id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |
 | --- | --- | --- | --- | --- | --- |
@@ -65,7 +66,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 三、精选单仓
 
 <!-- CURATED_START -->
-`best.json` 当前 **33** 个站点、**5** 个直播源，按类型分块：
+`best.json` 当前 **33** 个站点、**6** 个直播源，按类型分块：
 
 | 分块 | 数量 | 站点 |
 | --- | --- | --- |
@@ -96,8 +97,9 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 | 列表 | 来源 | 分组 | 说明 |
 | --- | --- | --- | --- |
 | 上海联通 · IPTV | 自抓的联通单播列表 + hxchtiewei/sh-iptv | 央视 / 卫视 / 4K / 上海 / 影视少儿 | 运营商自己的流，无广告、全高清带 4K。HD、SD 和第二套 token 作为同一频道的多条线路 |
-| 江苏移动 · IPTV | cicivi/jsyd-iptv | 央视 / 卫视 / 4K / 港台 | 魔百盒 OTT 流 |
+| 江苏移动 · IPTV | cicivi/jsyd-iptv + XSFTC/MY-IPTV + 0x1301FDF/iptv | 央视 / 卫视 / 4K / 港台 | 魔百盒 OTT 流，三份列表合并 |
 | 上海移动 · IPTV | fanjunjia/SH_CMCC_IPTV + kiwi5656/CMSH.IPTV | 央视 / 卫视 / 4K / 上海 / 影视少儿 | 三份列表合并 |
+| 浙江移动 · IPTV | wzyybbo/myzjyd + XSFTC/MY-IPTV | 央视 / 卫视 / 4K / 浙江 | 单播，无 token |
 | 光影 · 直播 | 饭太硬综合直播、Kimentanm、ssili126/tv、vbskycn/iptv | 央视 / 卫视 / 4K / 港台 | 公开源合并；线路按 `host_priority` 排序，`blacklist` 里插广告的中转直接丢掉 |
 | 光影 · 移动IPv6 | fanmingming/live | 央视 / 卫视 | 北京移动 IPv6 组播转发 |
 
@@ -106,7 +108,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 `lives.json` 的要点：
 
 - `sources`：每个来源可以有 `url`（每次运行重新抓取，跟踪上游仓库）和 `file`（仓库里的副本，抓不到时回退）。
-- `outputs`：每份输出用哪些来源、要哪些分组；`extra_groups` 按名单把频道归到"上海""影视少儿"这类额外分组。
+- `outputs`：每份输出用哪些来源、要哪些分组；`extra_groups` 按名单、`source_groups` 按上游列表自己的分组名，把频道归到"上海""浙江""影视少儿"这类额外分组。
 - `rules`：频道名清洗（去掉 HD / 高清 / 频道 等后缀）、`rename`、`drop`，港台的匹配规则，卫视顺序（一线卫视在前，其余按拼音）。
 - `host_priority` / `host_priority_low` / `blacklist`：同一频道内线路的先后，以及要丢掉的主机。
 - 频道名刻意保持简短（`CCTV1`、`湖南卫视`、`北京卫视4K`），这样台标和节目单都能直接按名字对上。
@@ -177,6 +179,7 @@ python probe.py --tv 192.168.31.66 --play   # 在电视上实测（需要 FongMi
 - **某些站点打开是空的？** 网盘类站点（我的云盘、玩偶哥哥、盘搜、易搜等）依赖本机的网盘 token 文件，需要先在「我的云盘 · 配置」或「王二小网盘登录」里扫码登录夸克 / 阿里云盘。
 - **讴歌为什么没有？** 它的接口对任何来源都返回 403，GitHub 的服务器也拉不到，已从源列表移除。
 - **精选里为什么没有某个源的站点？** 要么在其他源里已有同名站点，要么检查时它的 jar 或接口已失效。`picks.json` 里的 `_removed` 字段记录了删除原因。
+- **为什么没有电信的列表？** GitHub 上的江苏 / 上海 / 浙江电信列表（shawze、lucifersun、LionixQ 等）全是 `igmp://`、`rtp://` 组播或需要 IPTV 专网的 RTSP 地址，必须在路由器上跑 udpxy 并接入 IPTV VLAN 才能用，普通局域网里 FongMi 播不了，所以没有收。
 - **运营商 IPTV 列表播不了？** 只有对应运营商的宽带能通：上海联通列表走 10.223.x.x 内网，移动列表走 ott.mobaibox.com / iptvrr.sh.chinamobile.com，别的网络一律超时。上海联通列表的地址里带机顶盒 token，失效后需要重新抓一份替换 `live/shlt-source.m3u`。
 - **直播换了四五个台之后就卡住，退出等一会儿又好？** 不是源的问题，是节目单地址不通。FongMi 每次换台都会去拉该频道的节目单，`epg.112114.xyz` 在部分家庭网络会被 DNS 污染（解析到国外地址），连接要 30 秒才超时；FongMi 的 EPG 任务和取流任务共用一个 5 线程的任务池，EPG 任务超时后线程仍被占着，四五次换台后池子就满了，新频道的取流任务排不上队，直到旧的超时释放。本仓库已改用自建节目单加 51zmt 兜底；自己写配置时务必给 `epg` 一个能连通的地址，或者干脆不写。
 - **台标或节目单缺了某个台？** 两个台标来源和两个节目单来源都没有的频道就是缺的（目前台标缺 多彩文体、新闻综合、纬来体育、蒙语卫视，节目单缺上海本地台、CGTN 各语种、翡翠台等 23 个）。补充来源改 `logos.py` 的 `TEMPLATES` 或 `epg.py` 的 `SOURCES` 即可。

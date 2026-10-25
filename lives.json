@@ -67,6 +67,41 @@
       "url": "https://raw.githubusercontent.com/kiwi5656/CMSH.IPTV/main/Shanghai%20CM%20IPTV.m3u8",
       "file": "live/shcm3-source.m3u",
       "_doc": "同仓库的另一份，70 条走 39.134.87.62 单播，作为同频道的备用线路。"
+    },
+    {
+      "id": "zjyd1",
+      "name": "浙江移动（myzjyd zjyd）",
+      "url": "https://raw.githubusercontent.com/wzyybbo/myzjyd/%E6%B5%99%E6%B1%9F%E7%A7%BB%E5%8A%A8/zjyd",
+      "file": "live/zjyd1-source.txt",
+      "_doc": "github.com/wzyybbo/myzjyd（默认分支名是中文“浙江移动”），浙江移动单播 hwltc.tv.cdn.zj.chinamobile.com，无 token，2026-08 更新；只有浙江移动宽带能播。"
+    },
+    {
+      "id": "zjyd2",
+      "name": "浙江移动（myzjyd 浙江移动.txt）",
+      "url": "https://raw.githubusercontent.com/wzyybbo/myzjyd/%E6%B5%99%E6%B1%9F%E7%A7%BB%E5%8A%A8/%E6%B5%99%E6%B1%9F%E7%A7%BB%E5%8A%A8.txt",
+      "file": "live/zjyd2-source.txt",
+      "_doc": "同仓库另一份，含码率标注的线路。"
+    },
+    {
+      "id": "zjyd3",
+      "name": "浙江移动（XSFTC/MY-IPTV）",
+      "url": "https://raw.githubusercontent.com/XSFTC/MY-IPTV/main/m3u/cmcc_zj.m3u",
+      "file": "live/zjyd3-source.m3u",
+      "_doc": "github.com/XSFTC/MY-IPTV 的 cmcc_zj.m3u，2026-10 更新。"
+    },
+    {
+      "id": "jsyd2",
+      "name": "江苏移动（XSFTC/MY-IPTV）",
+      "url": "https://raw.githubusercontent.com/XSFTC/MY-IPTV/main/m3u/cmcc.m3u",
+      "file": "live/jsyd2-source.m3u",
+      "_doc": "github.com/XSFTC/MY-IPTV 的 cmcc.m3u，ott.mobaibox.com，2026-10 更新，作江苏移动备用线路。"
+    },
+    {
+      "id": "jsyd3",
+      "name": "江苏移动（0x1301FDF）",
+      "url": "https://raw.githubusercontent.com/0x1301FDF/iptv/main/iptv.m3u8",
+      "file": "live/jsyd3-source.m3u",
+      "_doc": "github.com/0x1301FDF/iptv，2026-10 更新，作江苏移动备用线路（带 * 通配的地址会被跳过）。"
     }
   ],
   "outputs": [
@@ -112,6 +147,24 @@
       ]
     },
     {
+      "file": "zjyd.txt",
+      "_doc": "浙江移动：三份列表合并，同频道多线路；只在浙江移动宽带下能播",
+      "sources": [
+        "zjyd3",
+        "zjyd1",
+        "zjyd2"
+      ],
+      "groups": [
+        "央视",
+        "卫视",
+        "4K",
+        "浙江"
+      ],
+      "source_groups": {
+        "浙江": "浙江"
+      }
+    },
+    {
       "file": "live-mobile.txt",
       "_doc": "北京移动 IPv6 组播（2409:8087），只在移动宽带下能播",
       "sources": [
@@ -122,7 +175,9 @@
       "file": "jsyd.txt",
       "_doc": "江苏移动 OTT，央视/卫视/4K/港台 四组，只在移动宽带下能播",
       "sources": [
-        "jsyd"
+        "jsyd",
+        "jsyd2",
+        "jsyd3"
       ]
     }
   ],
