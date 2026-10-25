@@ -30,7 +30,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 二、源可用性状态
 
 <!-- STATUS_START -->
-> 🔄 最近变化：2026-10-25 18:25（北京时间） · 本次成功 **9/9** 个源
+> 🔄 最近变化：2026-10-25 18:53（北京时间） · 本次成功 **9/9** 个源
 
 | id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |
 | --- | --- | --- | --- | --- | --- |
@@ -50,7 +50,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 三、精选单仓
 
 <!-- CURATED_START -->
-`best.json` 当前 **33** 个站点、**4** 个直播源，按类型分块：
+`best.json` 当前 **33** 个站点、**3** 个直播源，按类型分块：
 
 | 分块 | 数量 | 站点 |
 | --- | --- | --- |
@@ -70,8 +70,11 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 - `wallpaper`：用仓库里 `wallpaper/` 下的图片（光影自带的四张）作为壁纸，按日期轮换，地址指向 Pages。
 - `overrides`：按统一后的站点名覆盖字段，例如把搜索很慢的站标成 `searchable: 0`。
 - `order`：分块顺序，每块列出站点名。没列到的站点排在最后，并在 `status.json` 的 `curated.warnings` 里提示。
-- `lives`：直播源按 URL 合并去重，`exclude` 按名字剔除，非底本来源的加上"来源 · "前缀。
-  目前保留饭太硬的 综合直播、Kimentanm（央视频道最全，个别中转线路偶有广告，换线路即可），再用 `extra` 直接引用外部列表（ssili126/tv、vbskycn/iptv 的 IPv4 列表，经实测可用）作为补充；`allow_local` 可放行本机代理源，目前为空。
+- `lives`：直播源不再直接引用各家的直播条目（`only_extra: true`），而是用 `lives.py` 按 `lives.json` 生成三份精简列表（`live/*.txt`，FongMi txt 格式，同一频道多条线路）：
+  - `上海联通 · IPTV`：运营商 IPTV 单播流（`live/shlt-source.m3u`，10.223.x.x 内网地址），无广告、全高清带 4K，只有上海联通宽带能播。分组：央视 / 卫视 / 4K / 上海 / 影视少儿。
+  - `光影 · 直播`：合并 综合直播、Kimentanm、ssili126、vbskycn，只留 央视 / 卫视 / 4K / 港台 四组，线路按 `host_priority` 排序，`blacklist` 里插广告的中转直接丢掉。
+  - `光影 · 移动IPv6`：fanmingming 的北京移动 IPv6 组播转发，只在移动宽带下能播。
+  三个条目都带台标（fanmingming）和 EPG（112114）。
 
 要删站、改名或调顺序，改 `picks.json` 推送即可，工作流会自动重新生成。
 
@@ -82,6 +85,7 @@ tv-sub/
 ├── .github/workflows/sync.yml   # 定时同步工作流
 ├── sources.json                 # 配置源列表（主地址 + 备用地址）
 ├── picks.json                   # 精选单仓配方
+├── lives.json / lives.py        # 直播列表配方与生成脚本 → live/*.txt
 ├── sync.py                      # 抓取 → 解包 → 整理 → 落盘 → 更新 README
 ├── check.py                     # 静态体检：jar、直播源、站点地址
 ├── best.json                    # 精选单仓
@@ -95,7 +99,7 @@ tv-sub/
 ## 五、自动更新机制
 
 - 工作流每 6 小时运行一次（UTC 0:17 / 6:17 / 12:17 / 18:17），也可以在 Actions 页面手动触发。
-- 修改 `sources.json`、`picks.json` 或 `sync.py` 并推送时会立即运行一次。
+- 修改 `sources.json`、`picks.json`、`lives.json`、`sync.py` 或 `lives.py` 并推送时会立即运行一次。
 - 只有产物内容真正变化时才提交，`status.json` 里的时间戳不算，避免无意义的提交。
 - 提交后自动请求 jsDelivr 清缓存（对 `@main` 的效果有限，见上文）。
 - 工作流使用内置 `GITHUB_TOKEN`，不需要配置任何密钥。
@@ -113,6 +117,7 @@ tv-sub/
 `check.py` 可以本地跑：下载每个 jar 核对 md5，拉取每个直播源数频道，探测站点的 js / 采集 / ext 地址，列出重名站点和依赖本机 token 文件的站点。它跑不了爬虫本身，所以通过检查的站仍可能播不了，但没通过的基本可以断定已失效。
 
 ```bash
+python lives.py           # 生成直播列表 live/*.txt
 python sync.py            # 抓取并生成全部产物
 python check.py best.json # 体检精选单仓
 ```

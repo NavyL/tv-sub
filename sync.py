@@ -217,7 +217,8 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
     if live_opts.get("merge"):
         lives, urls, names = [], set(), set()
         excl = {norm_name(n) for n in live_opts.get("exclude", [])}
-        for sid in [picks["base"]] + [g["source"] for g in picks.get("picks", [])]:
+        srcs = [] if live_opts.get("only_extra") else [picks["base"]] + [g["source"] for g in picks.get("picks", [])]
+        for sid in srcs:
             for l in (cfgs.get(sid) or {}).get("lives", []) or []:
                 u, n = l.get("url", ""), l.get("name", "")
                 if not u.startswith("http") or u in urls or norm_name(n) in excl:

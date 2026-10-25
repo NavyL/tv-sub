@@ -23,29 +23,28 @@
  ],
  "lives": [
   {
-   "name": "综合直播",
+   "name": "上海联通 · IPTV",
    "type": 0,
-   "url": "http://193.123.86.190:14888/TV/iptv.php",
-   "ua": "bingcha/1.1 (mianfeifenxiang)",
-   "playerType": 2
+   "url": "https://navyl.github.io/tv-sub/live/shlt.txt",
+   "playerType": 2,
+   "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
+   "logo": "https://live.fanmingming.cn/tv/{name}.png"
   },
   {
-   "name": "Kimentanm",
+   "name": "光影 · 直播",
    "type": 0,
-   "url": "https://ghproxy.net/https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u",
-   "playerType": 2
+   "url": "https://navyl.github.io/tv-sub/live/live.txt",
+   "playerType": 2,
+   "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
+   "logo": "https://live.fanmingming.cn/tv/{name}.png"
   },
   {
-   "name": "ssili126 · 酒店源",
+   "name": "光影 · 移动IPv6",
    "type": 0,
-   "url": "https://raw.githubusercontent.com/ssili126/tv/main/itvlist.txt",
-   "playerType": 2
-  },
-  {
-   "name": "vbskycn · IPv4",
-   "type": 0,
-   "url": "https://raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.m3u",
-   "playerType": 2
+   "url": "https://navyl.github.io/tv-sub/live/live-mobile.txt",
+   "playerType": 2,
+   "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
+   "logo": "https://live.fanmingming.cn/tv/{name}.png"
   }
  ],
  "wallpaper": "https://navyl.github.io/tv-sub/wallpaper/3.webp",

@@ -185,22 +185,36 @@
       "牛播一"
     ],
     "allow_local": [],
-    "_doc": "2026-10-25 盘点：家里无 IPv6，小盒子 live 的央视卫视大多是 IPv6 地址，Kimentanm 主力主机已死，YY轮播只剩占位，虎牙/斗鱼一起看用户不要；只留饭太硬的综合直播，并放行它的本机代理源“牛播一”（由饭太硬 jar 在电视上生成，精选用的正是这个 jar）。 2026-10-25 盘点 GitHub 直播源项目后追加两个外部列表（extra，直接引用不镜像）：ssili126/tv 和 vbskycn/iptv 的 IPv4 列表。 2026-10-25 晚：综合直播每次播放都带广告，用户要求去掉。 牛播一同样带广告，也去掉；饭太硬的直播源全部不用，只留 ssili126 和 vbskycn。 2026-10-25 晚：用户反馈广告是时有时无（来自某几条中转线路，不是列表本身），而 ssili126/vbskycn 央视频道不全（央视数：综合直播 29、Kimentanm 19、ssili126 10、vbskycn 7），所以把 综合直播 和 Kimentanm 加回来，四个源并存；牛播一仍不要。",
+    "_doc": "2026-10-25 盘点：家里无 IPv6，小盒子 live 的央视卫视大多是 IPv6 地址，Kimentanm 主力主机已死，YY轮播只剩占位，虎牙/斗鱼一起看用户不要；只留饭太硬的综合直播，并放行它的本机代理源“牛播一”（由饭太硬 jar 在电视上生成，精选用的正是这个 jar）。 2026-10-25 盘点 GitHub 直播源项目后追加两个外部列表（extra，直接引用不镜像）：ssili126/tv 和 vbskycn/iptv 的 IPv4 列表。 2026-10-25 晚：综合直播每次播放都带广告，用户要求去掉。 牛播一同样带广告，也去掉；饭太硬的直播源全部不用，只留 ssili126 和 vbskycn。 2026-10-25 晚：用户反馈广告是时有时无（来自某几条中转线路，不是列表本身），而 ssili126/vbskycn 央视频道不全（央视数：综合直播 29、Kimentanm 19、ssili126 10、vbskycn 7），所以把 综合直播 和 Kimentanm 加回来，四个源并存；牛播一仍不要。 2026-10-25 深夜：直播改为 lives.py 生成的三份列表（only_extra=true，不再直接引用各源的直播条目）。",
     "extra": [
       {
-        "name": "ssili126 · 酒店源",
+        "name": "上海联通 · IPTV",
         "type": 0,
-        "url": "https://raw.githubusercontent.com/ssili126/tv/main/itvlist.txt",
+        "url": "https://navyl.github.io/tv-sub/live/shlt.txt",
         "playerType": 2,
-        "_doc": "github.com/ssili126/tv：IPv4 酒店源，每日测速，2026-10-25 实测 40/40 通；备用 https://ghproxy.net/https://raw.githubusercontent.com/ssili126/tv/main/itvlist.txt"
+        "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
+        "logo": "https://live.fanmingming.cn/tv/{name}.png",
+        "_doc": "lives.py 从 live/shlt-source.m3u 生成；只有上海联通宽带能播"
       },
       {
-        "name": "vbskycn · IPv4",
+        "name": "光影 · 直播",
         "type": 0,
-        "url": "https://raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.m3u",
+        "url": "https://navyl.github.io/tv-sub/live/live.txt",
         "playerType": 2,
-        "_doc": "github.com/vbskycn/iptv：每日更新，2026-10-25 实测央视卫视 35/36 通；备用 https://live.zbds.top/tv/iptv4.m3u"
+        "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
+        "logo": "https://live.fanmingming.cn/tv/{name}.png",
+        "_doc": "lives.py 合并 综合直播/Kimentanm/ssili126/vbskycn，只留 央视/卫视/4K/港台，插广告的中转按 lives.json blacklist 丢掉"
+      },
+      {
+        "name": "光影 · 移动IPv6",
+        "type": 0,
+        "url": "https://navyl.github.io/tv-sub/live/live-mobile.txt",
+        "playerType": 2,
+        "epg": "https://epg.112114.xyz/?ch={name}&date={date}",
+        "logo": "https://live.fanmingming.cn/tv/{name}.png",
+        "_doc": "fanmingming 的北京移动 IPv6 组播转发（2409:8087），只在移动宽带下能播"
       }
-    ]
+    ],
+    "only_extra": true
   }
 }
