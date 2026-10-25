@@ -30,7 +30,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 二、源可用性状态
 
 <!-- STATUS_START -->
-> 🔄 最近变化：2026-10-25 17:04（北京时间） · 本次成功 **9/9** 个源
+> 🔄 最近变化：2026-10-25 17:22（北京时间） · 本次成功 **9/9** 个源
 
 | id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |
 | --- | --- | --- | --- | --- | --- |
@@ -50,7 +50,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 三、精选单仓
 
 <!-- CURATED_START -->
-`best.json` 当前 **33** 个站点、**2** 个直播源，按类型分块：
+`best.json` 当前 **33** 个站点、**4** 个直播源，按类型分块：
 
 | 分块 | 数量 | 站点 |
 | --- | --- | --- |
@@ -71,6 +71,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 - `overrides`：按统一后的站点名覆盖字段，例如把搜索很慢的站标成 `searchable: 0`。
 - `order`：分块顺序，每块列出站点名。没列到的站点排在最后，并在 `status.json` 的 `curated.warnings` 里提示。
 - `lives`：直播源按 URL 合并去重，`exclude` 按名字剔除，非底本来源的加上"来源 · "前缀。
+  `allow_local` 放行指定的本机代理源（饭太硬的牛播一）；`extra` 直接引用外部列表（ssili126/tv、vbskycn/iptv 的 IPv4 列表，经实测可用）。
 
 要删站、改名或调顺序，改 `picks.json` 推送即可，工作流会自动重新生成。
 

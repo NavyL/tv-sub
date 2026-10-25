@@ -233,6 +233,10 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
                     sep = (picks.get("names") or {}).get("separator", " · ")
                     l["name"] = f"{source_names.get(sid, sid)}{sep}{n}"
                 lives.append(l)
+        for l in live_opts.get("extra", []):          # external lists referenced as-is (not mirrored)
+            if l.get("url") and l["url"] not in urls:
+                urls.add(l["url"])
+                lives.append({k: v for k, v in l.items() if not k.startswith("_")})
         cfg["lives"] = lives
     return cfg, warnings
 

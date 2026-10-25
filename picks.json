@@ -187,6 +187,22 @@
     "allow_local": [
       "牛播一"
     ],
-    "_doc": "2026-10-25 盘点：家里无 IPv6，小盒子 live 的央视卫视大多是 IPv6 地址，Kimentanm 主力主机已死，YY轮播只剩占位，虎牙/斗鱼一起看用户不要；只留饭太硬的综合直播，并放行它的本机代理源“牛播一”（由饭太硬 jar 在电视上生成，精选用的正是这个 jar）。"
+    "_doc": "2026-10-25 盘点：家里无 IPv6，小盒子 live 的央视卫视大多是 IPv6 地址，Kimentanm 主力主机已死，YY轮播只剩占位，虎牙/斗鱼一起看用户不要；只留饭太硬的综合直播，并放行它的本机代理源“牛播一”（由饭太硬 jar 在电视上生成，精选用的正是这个 jar）。 2026-10-25 盘点 GitHub 直播源项目后追加两个外部列表（extra，直接引用不镜像）：ssili126/tv 和 vbskycn/iptv 的 IPv4 列表。",
+    "extra": [
+      {
+        "name": "ssili126 · 酒店源",
+        "type": 0,
+        "url": "https://raw.githubusercontent.com/ssili126/tv/main/itvlist.txt",
+        "playerType": 2,
+        "_doc": "github.com/ssili126/tv：IPv4 酒店源，每日测速，2026-10-25 实测 40/40 通；备用 https://ghproxy.net/https://raw.githubusercontent.com/ssili126/tv/main/itvlist.txt"
+      },
+      {
+        "name": "vbskycn · IPv4",
+        "type": 0,
+        "url": "https://raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.m3u",
+        "playerType": 2,
+        "_doc": "github.com/vbskycn/iptv：每日更新，2026-10-25 实测央视卫视 35/36 通；备用 https://live.zbds.top/tv/iptv4.m3u"
+      }
+    ]
   }
 }

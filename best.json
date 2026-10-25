@@ -33,6 +33,18 @@
    "name": "牛播一",
    "url": "http://127.0.0.1:9978/proxy?do=cctva",
    "timeZone": "Asia/Shanghai"
+  },
+  {
+   "name": "ssili126 · 酒店源",
+   "type": 0,
+   "url": "https://raw.githubusercontent.com/ssili126/tv/main/itvlist.txt",
+   "playerType": 2
+  },
+  {
+   "name": "vbskycn · IPv4",
+   "type": 0,
+   "url": "https://raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.m3u",
+   "playerType": 2
   }
  ],
  "wallpaper": "https://navyl.github.io/tv-sub/wallpaper/3.webp",
