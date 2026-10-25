@@ -193,10 +193,7 @@
         "url": "https://navyl.github.io/tv-sub/live/shlt.txt",
         "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
         "logo": "https://navyl.github.io/tv-sub/logo/{name}.png",
-        "_doc": "lives.py 从 live/shlt-source.m3u 生成；只有上海联通宽带能播；2026-10-25 换台慢（10 秒分片 + 服务器 2 倍限速），改用 IJK（playerType 1）试起播速度；5.8.2 已无 IJK/系统播放器可选（Live 没有 playerType 字段），改为 header Connection: close 试验\"换到第 5 个台卡住\"是否是连接池复用问题",
-        "header": {
-          "Connection": "close"
-        }
+        "_doc": "lives.py 从 live/shlt-source.m3u 生成；只有上海联通宽带能播；2026-10-25 换台慢（10 秒分片 + 服务器 2 倍限速），改用 IJK（playerType 1）试起播速度；2026-10-25 \"换 4 个台后卡住\"根因：旧 EPG 域名 epg.112114.xyz 在家里被 DNS 污染，FongMi 每次换台的 EPG 请求把 5 线程的任务池占满，取流任务排不上队；换成 51zmt 后消失（见 README 常见问题）。"
       },
       {
         "name": "光影 · 直播",

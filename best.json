@@ -27,10 +27,7 @@
    "type": 0,
    "url": "https://navyl.github.io/tv-sub/live/shlt.txt",
    "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
-   "logo": "https://navyl.github.io/tv-sub/logo/{name}.png",
-   "header": {
-    "Connection": "close"
-   }
+   "logo": "https://navyl.github.io/tv-sub/logo/{name}.png"
   },
   {
    "name": "光影 · 直播",
