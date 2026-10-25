@@ -37,7 +37,15 @@
       "id": "jsyd",
       "name": "江苏移动 IPTV",
       "file": "live/jsyd-source.m3u",
-      "_doc": "用户提供的江苏移动 OTT（魔百盒）列表 2026-10-17 版，210 条，205 条走 ott.mobaibox.com（223.110.x，江苏移动）。联通线上 TCP 超时，只有移动宽带能播。"
+      "_doc": "用户提供的江苏移动 OTT（魔百盒）列表 2026-10-17 版，210 条，205 条走 ott.mobaibox.com（223.110.x，江苏移动）。联通线上 TCP 超时，只有移动宽带能播。 现在直接抓 cicivi/jsyd-iptv 仓库的 m3u（10-23 更新），抓不到时回退到 live/jsyd-source.m3u。",
+      "url": "https://raw.githubusercontent.com/cicivi/jsyd-iptv/main/m3u/iptv.m3u8"
+    },
+    {
+      "id": "shlt2",
+      "name": "上海联通 IPTV（sh-iptv）",
+      "url": "https://raw.githubusercontent.com/hxchtiewei/sh-iptv/main/LT.m3u",
+      "file": "live/shlt2-source.m3u",
+      "_doc": "github.com/hxchtiewei/sh-iptv 的上海联通单播列表（2026-08 抓的另一套 token，59 条，2026-10-25 实测仍可用），作为同一频道的备用线路合并进 shlt.txt。"
     }
   ],
   "outputs": [
@@ -45,7 +53,8 @@
       "file": "shlt.txt",
       "_doc": "上海联通 IPTV：运营商自己的流，无广告，HD 优先、SD 作备用线路；购物/直播室/导视不要",
       "sources": [
-        "shlt"
+        "shlt",
+        "shlt2"
       ],
       "groups": [
         "央视",

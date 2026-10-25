@@ -192,14 +192,13 @@ def main():
     out_dir = os.path.join(HERE, "live")
     os.makedirs(out_dir, exist_ok=True)
     src_text = {}
+    def local(s):                              # committed copy of a list, used when there is no url or the fetch fails
+        p = os.path.join(HERE, s["file"])
+        return open(p, encoding="utf-8", errors="replace").read() if os.path.exists(p) else None
     for s in recipe["sources"]:
-        if s.get("file"):                      # local, private list (never committed)
-            p = os.path.join(HERE, s["file"])
-            if os.path.exists(p):
-                src_text[s["id"]] = open(p, encoding="utf-8", errors="replace").read()
-                print(f"{s['id']:12s} local {len(src_text[s['id']])} bytes")
-            else:
-                print(f"{s['id']:12s} local file missing, skipped")
+        if s.get("file") and not s.get("url"):
+            src_text[s["id"]] = local(s)
+            print(f"{s['id']:12s} {'local ' + str(len(src_text[s['id']])) + ' bytes' if src_text[s['id']] else 'local file missing, skipped'}")
     with cf.ThreadPoolExecutor(8) as ex:
         futs = {ex.submit(fetch, s["url"], s.get("ua", UA)): s for s in recipe["sources"] if s.get("url")}
         for f in cf.as_completed(futs):
@@ -208,7 +207,9 @@ def main():
                 src_text[s["id"]] = f.result()
                 print(f"{s['id']:12s} ok  {len(src_text[s['id']])} bytes")
             except Exception as e:  # noqa: BLE001
-                print(f"{s['id']:12s} FAIL {e}")
+                fb = local(s) if s.get("file") else None
+                src_text[s["id"]] = fb
+                print(f"{s['id']:12s} FAIL {e}" + (f" -> fallback file {len(fb)} bytes" if fb else ""))
     changed = False
     for out in recipe["outputs"]:
         path = os.path.join(out_dir, out["file"])

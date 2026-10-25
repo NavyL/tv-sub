@@ -74,6 +74,7 @@ jobs:
           cp output/*.json site/output/
           [ -d wallpaper ] && cp -r wallpaper site/
           mkdir -p site/live && cp live/*.txt site/live/
+          [ -d logo ] && cp -r logo site/
           sed "s#https://cdn.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main#${pages}#g" multi.json > site/multi.json
           printf '<!doctype html><meta charset="utf-8"><title>tv-sub</title><p><a href="best.json">best.json</a> · <a href="multi.json">multi.json</a> · <a href="tv.json">tv.json</a> · <a href="status.json">status.json</a>' > site/index.html
 

@@ -71,11 +71,11 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 - `overrides`：按统一后的站点名覆盖字段，例如把搜索很慢的站标成 `searchable: 0`。
 - `order`：分块顺序，每块列出站点名。没列到的站点排在最后，并在 `status.json` 的 `curated.warnings` 里提示。
 - `lives`：直播源不再直接引用各家的直播条目（`only_extra: true`），而是用 `lives.py` 按 `lives.json` 生成三份精简列表（`live/*.txt`，FongMi txt 格式，同一频道多条线路）：
-  - `上海联通 · IPTV`：运营商 IPTV 单播流（`live/shlt-source.m3u`，10.223.x.x 内网地址），无广告、全高清带 4K，只有上海联通宽带能播。分组：央视 / 卫视 / 4K / 上海 / 影视少儿。
+  - `上海联通 · IPTV`：运营商 IPTV 单播流（`live/shlt-source.m3u` 加 hxchtiewei/sh-iptv 的第二套 token 作备用线路，10.223.x.x 内网地址），无广告、全高清带 4K，只有上海联通宽带能播。分组：央视 / 卫视 / 4K / 上海 / 影视少儿。
   - `光影 · 直播`：合并 综合直播、Kimentanm、ssili126、vbskycn，只留 央视 / 卫视 / 4K / 港台 四组，线路按 `host_priority` 排序，`blacklist` 里插广告的中转直接丢掉。
   - `光影 · 移动IPv6`：fanmingming 的北京移动 IPv6 组播转发，只在移动宽带下能播。
   - `江苏移动 · IPTV`：江苏移动 OTT 列表（`live/jsyd-source.m3u`，ott.mobaibox.com），同样只在移动宽带下能播。
-  三个条目都带台标（fanmingming）和 EPG（112114）。
+  所有直播条目都带台标和节目单：台标镜像在仓库 `logo/`（来自 cicivi/jsyd-iptv 与 fanmingming/live，按频道名取 `logo/{name}.png`），节目单用老张的 EPG（`epg.51zmt.top`）。
 
 要删站、改名或调顺序，改 `picks.json` 推送即可，工作流会自动重新生成。
 
