@@ -5,7 +5,7 @@ on:
     - cron: "17 */6 * * *"     # every 6 hours (UTC)
   workflow_dispatch:
   push:
-    paths: ["sources.json", "picks.json", "sync.py", "lives.json", "lives.py", "epg.py", ".github/workflows/sync.yml"]
+    paths: ["sources.json", "picks.json", "sync.py", "lives.json", "lives.py", "logos.py", "epg.py", ".github/workflows/sync.yml"]
 
 permissions:
   contents: write
@@ -31,6 +31,10 @@ jobs:
 
       - name: Merge public live lists
         run: python lives.py
+        continue-on-error: true
+
+      - name: Fetch missing channel logos
+        run: python logos.py
         continue-on-error: true
 
       - name: Fetch and decode upstream sources

@@ -75,7 +75,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
   - `光影 · 直播`：合并 综合直播、Kimentanm、ssili126、vbskycn，只留 央视 / 卫视 / 4K / 港台 四组，线路按 `host_priority` 排序，`blacklist` 里插广告的中转直接丢掉。
   - `光影 · 移动IPv6`：fanmingming 的北京移动 IPv6 组播转发，只在移动宽带下能播。
   - `江苏移动 · IPTV`：江苏移动 OTT 列表（`live/jsyd-source.m3u`，ott.mobaibox.com），同样只在移动宽带下能播。
-  所有直播条目都带台标和节目单：台标镜像在仓库 `logo/`（来自 cicivi/jsyd-iptv 与 fanmingming/live，按频道名取 `logo/{name}.png`），节目单主用仓库自己生成的 `live/epg.xml.gz`（`epg.py` 把 fanmingming、51zmt 的 xmltv 按我们的频道名重排，每次工作流运行重建并发到 Pages，不入库），51zmt 的接口做兜底；两者在 `epg` 字段里用逗号并列，FongMi 先用 xml 再查接口。
+  所有直播条目都带台标和节目单：台标镜像在仓库 `logo/`（来自 cicivi/jsyd-iptv 与 fanmingming/live，按频道名取 `logo/{name}.png`；`logos.py` 每次运行会为新出现、还没有台标的频道自动补图并入库），节目单主用仓库自己生成的 `live/epg.xml.gz`（`epg.py` 把 fanmingming、51zmt 的 xmltv 按我们的频道名重排，每次工作流运行重建并发到 Pages，不入库），51zmt 的接口做兜底；两者在 `epg` 字段里用逗号并列，FongMi 先用 xml 再查接口。
 
 要删站、改名或调顺序，改 `picks.json` 推送即可，工作流会自动重新生成。
 
@@ -88,6 +88,7 @@ tv-sub/
 ├── picks.json                   # 精选单仓配方
 ├── lives.json / lives.py        # 直播列表配方与生成脚本 → live/*.txt
 ├── epg.py                       # 节目单：生成 live/epg.xml.gz（只发 Pages）
+├── logos.py                     # 台标：为缺图的频道自动补 logo/<name>.png
 ├── sync.py                      # 抓取 → 解包 → 整理 → 落盘 → 更新 README
 ├── check.py                     # 静态体检：jar、直播源、站点地址
 ├── best.json                    # 精选单仓
