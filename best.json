@@ -23,11 +23,6 @@
  ],
  "lives": [
   {
-   "name": "牛播一",
-   "url": "http://127.0.0.1:9978/proxy?do=cctva",
-   "timeZone": "Asia/Shanghai"
-  },
-  {
    "name": "ssili126 · 酒店源",
    "type": 0,
    "url": "https://raw.githubusercontent.com/ssili126/tv/main/itvlist.txt",
