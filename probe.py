@@ -11,7 +11,18 @@ Usage: python probe.py --tv 192.168.31.78 [config.json] [--search 周处除三�
 The app must be in the foreground (its web server lives in the activity) and no other
 FongMi app may hold port 9978.
 """
-import argparse, json, os, sys, time, urllib.request
+import argparse, json, os, subprocess, sys, time, urllib.error, urllib.request
+
+PKG = "local.guangying.tv"
+
+
+def relaunch(serial):
+    """The spider runs inside the app; a crashing site takes the whole app (and its server) down."""
+    adb = ["adb", "-s", serial, "shell"]
+    subprocess.run(adb + ["am", "force-stop", PKG], capture_output=True)
+    time.sleep(2)
+    subprocess.run(adb + ["monkey", "-p", PKG, "-c", "android.intent.category.LEANBACK_LAUNCHER", "1"], capture_output=True)
+    time.sleep(12)
 
 
 class Api:
@@ -65,6 +76,8 @@ def main():
     ap.add_argument("--search", default="")
     ap.add_argument("--timeout", type=int, default=20, help="per-call timeout on the device, seconds (1-300)")
     ap.add_argument("--only", default="", help="comma-separated site names to test")
+    ap.add_argument("--play", action="store_true", help="also run detail() on the first item and play() on its first episode")
+    ap.add_argument("--adb", default="", help="adb serial (e.g. 192.168.31.78:5555): relaunch the app and continue when a site crashes it")
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8")
     cfg = json.load(open(a.config, encoding="utf-8"))
@@ -75,15 +88,14 @@ def main():
     api = Api(a.tv, a.timeout)
     api.open()
     rows = []
-    try:
-        for s in sites:
+    def probe_site(s):
             name, jar = s["name"], s.get("jar") or cfg.get("spider", "")
             row = {"name": name, "api": s.get("api", "")}
             st, res, ms = api.work("/load", {"api": s.get("api", ""), "jar": jar, "ext": s.get("ext", "")})
             row["load"] = (st, ms)
             if st != "loaded":
                 row["note"] = f"load {st}: {str(res)[:80]}"
-                rows.append(row); print(f"{name:14} load FAIL {st} {str(res)[:80]}", flush=True); continue
+                rows.append(row); print(f"{name:14} load FAIL {st} {str(res)[:80]}", flush=True); return
             st, res, ms = api.work("/run", {"method": "home", "args": [True]})
             home = parse(res) or {}
             classes = home.get("class") or []
@@ -93,17 +105,54 @@ def main():
                 st2, res2, ms2 = api.work("/run", {"method": "category", "args": [str(first), "1", True, {}]})
                 cat = parse(res2) or {}
                 row["cat"] = (st2, ms2, len(cat.get("list") or []))
+            if a.play and st == "done" and first is not None:
+                items = cat.get("list") or []
+                if items:
+                    vid = str(items[0].get("vod_id", ""))
+                    st4, res4, ms4 = api.work("/run", {"method": "detail", "args": [[vid]]})
+                    det = parse(res4) or {}
+                    dl = (det.get("list") or [{}])[0]
+                    flags = str(dl.get("vod_play_from", "")).split("$$$")
+                    urls = str(dl.get("vod_play_url", "")).split("$$$")
+                    row["detail"] = (st4, ms4, len(flags) if dl else 0)
+                    if st4 == "done" and dl and urls and urls[0]:
+                        ep = urls[0].split("#")[0]
+                        pid = ep.split("$", 1)[1] if "$" in ep else ep
+                        st5, res5, ms5 = api.work("/run", {"method": "play", "args": [flags[0], pid, []]})
+                        pl = parse(res5) or {}
+                        ok = bool(pl.get("url")) and str(pl.get("url"))[:4] in ("http", "file", "rtmp", "rtsp")
+                        row["play"] = (st5, ms5, ok, str(pl.get("url", ""))[:60], pl.get("parse"))
             if a.search and s.get("searchable", 1):
                 st3, res3, ms3 = api.work("/run", {"method": "search", "args": [a.search, False, "1"]})
                 sr = parse(res3) or {}
                 row["search"] = (st3, ms3, len(sr.get("list") or []))
             rows.append(row)
-            h = row["home"]; c = row.get("cat"); q = row.get("search")
+            report(row, name)
+
+    def report(row, name):
+            h = row["home"]; c = row.get("cat"); q = row.get("search"); d = row.get("detail"); p = row.get("play")
             print(f"{name:14} load {row['load'][1]:5}ms | home {h[0]:9} {h[1]:5}ms cls={h[2]:3} rec={h[3]:3}"
                   + (f" | cat {c[0]:9} {c[1]:5}ms n={c[2]:3}" if c else " | cat -")
+                  + (f" | detail {d[0]:9} {d[1]:5}ms flags={d[2]}" if d else (" | detail -" if a.play else ""))
+                  + (f" | play {p[0]:9} {p[1]:5}ms {'OK' if p[2] else 'NO-URL'} parse={p[4]} {p[3]}" if p else (" | play -" if a.play else ""))
                   + (f" | search {q[0]:9} {q[1]:5}ms n={q[2]:3}" if q else ""), flush=True)
+
+    try:
+        for s in sites:
+            try:
+                probe_site(s)
+            except (urllib.error.URLError, ConnectionError, TimeoutError) as e:
+                rows.append({"name": s["name"], "api": s.get("api", ""), "note": f"app died during test: {e}"})
+                print(f"{s['name']:14} APP DIED during test ({str(e)[:60]})", flush=True)
+                if not a.adb:
+                    raise
+                relaunch(a.adb)
+                api.open()
     finally:
-        api.close()
+        try:
+            api.close()
+        except Exception:  # noqa: BLE001
+            pass
     out = os.path.join(os.path.dirname(os.path.abspath(a.config)), "probe.json")
     json.dump(rows, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"\nsaved {out}")
