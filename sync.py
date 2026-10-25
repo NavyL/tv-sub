@@ -143,7 +143,7 @@ def build_curated(cfgs: dict, picks: dict, source_names: dict = None):
     base = cfgs.get(picks["base"])
     if base is None:
         return None, [f"base source {picks['base']} unavailable"]
-    cfg = {k: v for k, v in base.items() if k != "sites"}
+    cfg = {k: v for k, v in base.items() if k != "sites" and k not in (picks.get("drop_keys") or [])}
     if picks.get("base_names"):   # explicit keep-list for the base source, in list order
         sites = []
         for name in picks["base_names"]:
