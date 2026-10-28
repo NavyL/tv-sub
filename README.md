@@ -46,12 +46,12 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 二、源可用性状态
 
 <!-- STATUS_START -->
-> 🔄 最近变化：2026-10-27 06:45（北京时间） · 本次成功 **9/9** 个源
+> 🔄 最近变化：2026-10-29 06:42（北京时间） · 本次成功 **9/9** 个源
 
 | id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |
 | --- | --- | --- | --- | --- | --- |
 | fantaiying | 饭太硬 | ✅ 正常 | 49 | 6 | `http://www.饭太硬.cc/tv` |
-| feimao | 肥猫 | ✅ 正常 | 38 | 1 | `http://肥猫.net/tv` |
+| feimao | 肥猫 | ✅ 正常 | 39 | 1 | `http://肥猫.net/tv` |
 | wangerxiao | 王二小 | ✅ 正常 | 99 | 2 | `https://9280.kstore.vip/newwex.json` |
 | laoliubei | 老刘备 | ✅ 正常 | 234 | 3 | `https://raw.liucn.cc/box/m.json` |
 | xiaoma | 小马 | ✅ 正常 | 62 | 10 | `https://szyyds.cn/tv/x.json` |
