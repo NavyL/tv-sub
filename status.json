@@ -1,19 +1,17 @@
 {
- "updated": "2026-10-29 13:58",
+ "updated": "2026-10-29 21:17",
  "sources": {
   "fantaiying": {
    "ok": true,
    "url": "http://www.饭太硬.cc/tv",
-   "sites": 49,
+   "sites": 48,
    "lives": 6,
    "urls": 0
   },
   "feimao": {
-   "ok": true,
-   "url": "http://肥猫.net/tv",
-   "sites": 39,
-   "lives": 1,
-   "urls": 0
+   "ok": false,
+   "error": "http://肥猫.com/tv: ValueError: no JSON object found",
+   "cached": true
   },
   "wangerxiao": {
    "ok": true,
