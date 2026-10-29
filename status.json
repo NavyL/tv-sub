@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-29 21:17",
+ "updated": "2026-10-30 06:51",
  "sources": {
   "fantaiying": {
    "ok": true,
@@ -9,9 +9,11 @@
    "urls": 0
   },
   "feimao": {
-   "ok": false,
-   "error": "http://肥猫.com/tv: ValueError: no JSON object found",
-   "cached": true
+   "ok": true,
+   "url": "http://肥猫.net/tv",
+   "sites": 39,
+   "lives": 1,
+   "urls": 0
   },
   "wangerxiao": {
    "ok": true,
