@@ -1,5 +1,5 @@
 {
- "spider": "https://xiuxiu-pro-new.meitudata.com/posters/c2759c9c03b22f2242475139110972c7.jpg;md5;d2a33b53d09ec59c4cb7e3f482ef3907",
+ "spider": "https://xiuxiu-pro-new.meitudata.com/posters/5d1f9c9e4d99c85337af94b57afc12da.jpg;md5;e6c78bbbd60e50f611c9aac6ff273fd8",
  "rules": [
   {
    "name": "cdn.ryplay",
@@ -65,7 +65,7 @@
    "logo": "https://navyl.github.io/tv-sub/logo/{name}.png"
   }
  ],
- "wallpaper": "https://navyl.github.io/tv-sub/wallpaper/3.webp",
+ "wallpaper": "https://navyl.github.io/tv-sub/wallpaper/4.webp",
  "sites": [
   {
    "key": "点我切源",
@@ -85,7 +85,7 @@
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 0,
-   "jar": "http://oss4liview.moji.com/thd_file/2026/11/02/c9050ddf2e4eb65bc925f27924695099.jpg;md5;a5006e8f9c77331a30309c0e5f138481"
+   "jar": "http://oss4liview.moji.com/thd_file/2026/11/03/b1838e86a7164d1031cb5940af34ad7c.jpg;md5;a1dadb8ef5197d9ee9c8fde926aae2e2"
   },
   {
    "key": "奶酪",
@@ -116,7 +116,7 @@
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 0,
-   "jar": "http://oss4liview.moji.com/thd_file/2026/11/02/c9050ddf2e4eb65bc925f27924695099.jpg;md5;a5006e8f9c77331a30309c0e5f138481"
+   "jar": "http://oss4liview.moji.com/thd_file/2026/11/03/b1838e86a7164d1031cb5940af34ad7c.jpg;md5;a1dadb8ef5197d9ee9c8fde926aae2e2"
   },
   {
    "key": "wangerxiao_WexAiDuBoKu",
@@ -126,7 +126,7 @@
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 0,
-   "jar": "http://oss4liview.moji.com/thd_file/2026/11/02/c9050ddf2e4eb65bc925f27924695099.jpg;md5;a5006e8f9c77331a30309c0e5f138481"
+   "jar": "http://oss4liview.moji.com/thd_file/2026/11/03/b1838e86a7164d1031cb5940af34ad7c.jpg;md5;a1dadb8ef5197d9ee9c8fde926aae2e2"
   },
   {
    "key": "视界",
@@ -179,7 +179,7 @@
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 0,
-   "jar": "http://oss4liview.moji.com/thd_file/2026/11/02/c9050ddf2e4eb65bc925f27924695099.jpg;md5;a5006e8f9c77331a30309c0e5f138481"
+   "jar": "http://oss4liview.moji.com/thd_file/2026/11/03/b1838e86a7164d1031cb5940af34ad7c.jpg;md5;a1dadb8ef5197d9ee9c8fde926aae2e2"
   },
   {
    "key": "文采",
@@ -301,7 +301,7 @@
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 0,
-   "jar": "http://oss4liview.moji.com/thd_file/2026/11/02/c9050ddf2e4eb65bc925f27924695099.jpg;md5;a5006e8f9c77331a30309c0e5f138481"
+   "jar": "http://oss4liview.moji.com/thd_file/2026/11/03/b1838e86a7164d1031cb5940af34ad7c.jpg;md5;a1dadb8ef5197d9ee9c8fde926aae2e2"
   },
   {
    "key": "feimao_韩圈",
@@ -318,7 +318,7 @@
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 0,
-   "jar": "http://oss4liview.moji.com/thd_file/2026/11/02/c9050ddf2e4eb65bc925f27924695099.jpg;md5;a5006e8f9c77331a30309c0e5f138481"
+   "jar": "http://oss4liview.moji.com/thd_file/2026/11/03/b1838e86a7164d1031cb5940af34ad7c.jpg;md5;a1dadb8ef5197d9ee9c8fde926aae2e2"
   },
   {
    "key": "wangerxiao_AiNewGuanYing",
@@ -328,7 +328,7 @@
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 0,
-   "jar": "http://oss4liview.moji.com/thd_file/2026/11/02/c9050ddf2e4eb65bc925f27924695099.jpg;md5;a5006e8f9c77331a30309c0e5f138481"
+   "jar": "http://oss4liview.moji.com/thd_file/2026/11/03/b1838e86a7164d1031cb5940af34ad7c.jpg;md5;a1dadb8ef5197d9ee9c8fde926aae2e2"
   },
   {
    "key": "seed",
@@ -456,7 +456,7 @@
    "style": {
     "type": "list"
    },
-   "jar": "http://oss4liview.moji.com/thd_file/2026/11/02/c9050ddf2e4eb65bc925f27924695099.jpg;md5;a5006e8f9c77331a30309c0e5f138481"
+   "jar": "http://oss4liview.moji.com/thd_file/2026/11/03/b1838e86a7164d1031cb5940af34ad7c.jpg;md5;a1dadb8ef5197d9ee9c8fde926aae2e2"
   },
   {
    "key": "push_agent",
