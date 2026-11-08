@@ -1,5 +1,5 @@
 {
- "spider": "https://xiuxiu-pro-new.meitudata.com/posters/465261b2a8e5940658201e5029b7b4e4.jpg;md5;5efc6505e4e2b151e1610012dd757506",
+ "spider": "https://xiuxiu-pro-new.meitudata.com/posters/937f5abf1c7c4ff2f170d835c5c46c21.jpg;md5;9d5f341aa5f3353b50cc3bc16b4f3e8a",
  "rules": [
   {
    "name": "cdn.ryplay",
@@ -65,18 +65,8 @@
    "logo": "https://navyl.github.io/tv-sub/logo/{name}.png"
   }
  ],
- "wallpaper": "https://navyl.github.io/tv-sub/wallpaper/4.webp",
+ "wallpaper": "https://navyl.github.io/tv-sub/wallpaper/1.webp",
  "sites": [
-  {
-   "key": "点我切源",
-   "name": "豆豆 · 片单",
-   "type": 3,
-   "api": "csp_DouDouGuard",
-   "indexs": 1,
-   "searchable": 0,
-   "quickSearch": 0,
-   "changeable": 0
-  },
   {
    "key": "wangerxiao_玩偶",
    "name": "玩偶哥哥 · 4K",
@@ -103,7 +93,6 @@
    "type": 3,
    "api": "csp_AppgzGuard",
    "timeout": 15,
-   "playerType": "2",
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 1
@@ -155,7 +144,6 @@
    "type": 3,
    "api": "csp_AppTTGuard",
    "timeout": 10,
-   "playerType": 2,
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 1,
@@ -468,6 +456,16 @@
    "ext": {
     "Cloud-drive": "tvfan/Cloud-drive.txt"
    }
+  },
+  {
+   "key": "点我切源",
+   "name": "豆豆 · 片单 兼容安卓4",
+   "type": 3,
+   "api": "csp_DouDouGuard",
+   "indexs": 1,
+   "searchable": 0,
+   "quickSearch": 0,
+   "changeable": 0
   }
  ]
 }

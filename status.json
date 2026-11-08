@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-08 05:58",
+ "updated": "2026-11-08 14:17",
  "sources": {
   "fantaiying": {
    "ok": true,
@@ -65,6 +65,9 @@
  },
  "curated": {
   "sites": 33,
-  "warnings": []
+  "warnings": [
+   "order/影视: no site named '豆豆 · 片单'",
+   "order: '豆豆 · 片单 兼容安卓4' not listed, placed at the end"
+  ]
  }
 }
