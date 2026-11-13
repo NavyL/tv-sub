@@ -46,11 +46,11 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 二、源可用性状态
 
 <!-- STATUS_START -->
-> 🔄 最近变化：2026-11-12 03:42（北京时间） · 本次成功 **8/9** 个源
+> 🔄 最近变化：2026-11-14 03:51（北京时间） · 本次成功 **8/9** 个源
 
 | id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |
 | --- | --- | --- | --- | --- | --- |
-| fantaiying | 饭太硬 | ✅ 正常 | 48 | 5 | `http://www.饭太硬.cc/tv` |
+| fantaiying | 饭太硬 | ✅ 正常 | 49 | 6 | `http://www.饭太硬.cc/tv` |
 | feimao | 肥猫 | 📦 缓存 | | | 本次未抓到，沿用上次成功的文件 |
 | wangerxiao | 王二小 | ✅ 正常 | 100 | 2 | `https://9280.kstore.vip/newwex.json` |
 | laoliubei | 老刘备 | ✅ 正常 | 234 | 3 | `https://raw.liucn.cc/box/m.json` |
@@ -66,11 +66,11 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 三、精选单仓
 
 <!-- CURATED_START -->
-`best.json` 当前 **33** 个站点、**6** 个直播源，按类型分块：
+`best.json` 当前 **32** 个站点、**6** 个直播源，按类型分块：
 
 | 分块 | 数量 | 站点 |
 | --- | --- | --- |
-| 影视 | 17 | 玩偶哥哥 · 4K，奶酪，瓜子，伊影，独播，茉莉，糯米，热播，咕噜，伯伯，文采，干饭，再来，厂长，火火，360，量子 |
+| 影视 | 16 | 玩偶哥哥 · 4K，奶酪，瓜子，伊影，独播，糯米，热播，咕噜，伯伯，文采，干饭，再来，厂长，火火，360，量子 |
 | 外剧 | 2 | 韩剧，韩圈 |
 | 网盘 | 8 | 花卷 · 4K，观影 · 4K，聚剧 · 四盘，盘她 · 夸父，易搜 · 四盘，盘搜 · 四盘，盘他 · 嘟嘟，新6V · 磁力 |
 | 其他 | 2 | 巴士 · 动漫，八八 · 看球 |
@@ -78,8 +78,10 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 
 配方里有需要处理的条目：
 
+- fantaiying: no unique site matches '茉莉多线'
 - order/影视: no site named '豆豆 · 片单'
-- order: '豆豆 · 片单 兼容安卓4' not listed, placed at the end
+- order/影视: no site named '茉莉'
+- order: '豆豆 · 片单 Fix Everything' not listed, placed at the end
 <!-- CURATED_END -->
 
 每个站点都在电视上实测过首页、分类、详情和播放。精选的配方在 `picks.json`：

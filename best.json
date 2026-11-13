@@ -1,5 +1,5 @@
 {
- "spider": "https://xiuxiu-pro-new.meitudata.com/posters/c28784a6ef0dd766a33d69837920332a.jpg;md5;164fa61b160f3119f4f21489b9dfaf56",
+ "spider": "https://xiuxiu-pro-new.meitudata.com/posters/776af3c4b61098b3573b4973f867010c.jpg;md5;76e9565340e6d28c363b914ca2d506ed",
  "rules": [
   {
    "name": "cdn.ryplay",
@@ -17,9 +17,7 @@
  ],
  "logo": "https://bdcache1-f1.v3mh.com/image/25-12-16/6941612717007.gif",
  "hosts": [
-  "img1.wsyzy.org=cmcc.vvvv.ee",
   "fiizvfck.top=cmcc.vvvv.ee",
-  "images.67c6c7a.com=cmcc.vvvv.ee",
   "sub.ottiptv.cc=cmcc.vvvv.ee"
  ],
  "lives": [
@@ -119,17 +117,6 @@
    "jar": "http://oss4liview.moji.com/thd_file/2026/11/12/7b563c7039830e7c712e93f27fd2e102.jpg;md5;541366f5860ceb66e1c3005f5a299afe"
   },
   {
-   "key": "视界",
-   "name": "茉莉",
-   "type": 3,
-   "api": "csp_App99Guard",
-   "timeout": 10,
-   "searchable": 1,
-   "quickSearch": 1,
-   "changeable": 1,
-   "ext": "rfOX1voDIQhH8epBwtCFsuby/mmdmIu8kGlnJc+7VkMRLQ1K+jMy+KN1MKQe0MZ6tmGSO5oFzD8/vWwiSqEpFczDqLrdGT3iH6fZmryrFzKijwYkJUMctdztE0O4CsgYZdBu8XhZSwuhSqqllQz4AZMa1l0sT+1NrbhNIxHkrY0upiYSTLNqEaledgZikMCviOXWr3cPBP4COOeoGUyJSJrrybmUppnWGeDAOHhHOVUSXjwSb+QQvcJIT2lmrf1Bk68myGs7qOqc19tD/rnzf2WOb2MzJZqtURBmUFgaW6ea2dL8OPSpSeVAvaGCAnqwuUNGE9hHpK8jfOs0bLJRdkFLnijAn5Q+ofVM5hgGb8c="
-  },
-  {
    "key": "糯米",
    "name": "糯米",
    "type": 3,
@@ -176,7 +163,7 @@
    "type": 3,
    "api": "csp_JpysGuard",
    "timeout": 10,
-   "playerType": 2,
+   "playerType": 1,
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 1
@@ -223,7 +210,7 @@
    "type": 3,
    "api": "csp_NewCzGuard",
    "timeout": 10,
-   "playerType": 2,
+   "playerType": 1,
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 1
@@ -460,7 +447,7 @@
   },
   {
    "key": "点我切源",
-   "name": "豆豆 · 片单 兼容安卓4",
+   "name": "豆豆 · 片单 Fix Everything",
    "type": 3,
    "api": "csp_DouDouGuard",
    "indexs": 1,

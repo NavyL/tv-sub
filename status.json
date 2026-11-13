@@ -1,11 +1,11 @@
 {
- "updated": "2026-11-13 14:55",
+ "updated": "2026-11-14 03:51",
  "sources": {
   "fantaiying": {
    "ok": true,
    "url": "http://www.饭太硬.cc/tv",
-   "sites": 48,
-   "lives": 5,
+   "sites": 49,
+   "lives": 6,
    "urls": 0
   },
   "feimao": {
@@ -64,10 +64,12 @@
   }
  },
  "curated": {
-  "sites": 33,
+  "sites": 32,
   "warnings": [
+   "fantaiying: no unique site matches '茉莉多线'",
    "order/影视: no site named '豆豆 · 片单'",
-   "order: '豆豆 · 片单 兼容安卓4' not listed, placed at the end"
+   "order/影视: no site named '茉莉'",
+   "order: '豆豆 · 片单 Fix Everything' not listed, placed at the end"
   ]
  }
 }
