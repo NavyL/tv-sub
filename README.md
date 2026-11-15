@@ -46,7 +46,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 二、源可用性状态
 
 <!-- STATUS_START -->
-> 🔄 最近变化：2026-11-14 03:51（北京时间） · 本次成功 **8/9** 个源
+> 🔄 最近变化：2026-11-15 14:46（北京时间） · 本次成功 **8/9** 个源
 
 | id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |
 | --- | --- | --- | --- | --- | --- |
@@ -81,7 +81,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 - fantaiying: no unique site matches '茉莉多线'
 - order/影视: no site named '豆豆 · 片单'
 - order/影视: no site named '茉莉'
-- order: '豆豆 · 片单 Fix Everything' not listed, placed at the end
+- order: '豆豆 · 片单 升级弹幕' not listed, placed at the end
 <!-- CURATED_END -->
 
 每个站点都在电视上实测过首页、分类、详情和播放。精选的配方在 `picks.json`：
