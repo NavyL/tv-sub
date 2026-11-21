@@ -1,10 +1,10 @@
 {
- "updated": "2026-11-21 15:23",
+ "updated": "2026-11-22 03:26",
  "sources": {
   "fantaiying": {
    "ok": true,
    "url": "http://www.饭太硬.cc/tv",
-   "sites": 49,
+   "sites": 50,
    "lives": 5,
    "urls": 0
   },
@@ -69,7 +69,7 @@
    "fantaiying: no unique site matches '茉莉多线'",
    "order/影视: no site named '豆豆 · 片单'",
    "order/影视: no site named '茉莉'",
-   "order: '豆豆 · 片单 升级弹幕' not listed, placed at the end"
+   "order: '豆豆 · 片单 fix升级弹幕' not listed, placed at the end"
   ]
  }
 }
