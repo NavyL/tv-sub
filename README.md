@@ -46,13 +46,13 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 ## 二、源可用性状态
 
 <!-- STATUS_START -->
-> 🔄 最近变化：2026-11-22 03:26（北京时间） · 本次成功 **8/9** 个源
+> 🔄 最近变化：2026-11-23 03:49（北京时间） · 本次成功 **8/9** 个源
 
 | id | 配置源 | 状态 | 站点 | 直播 | 本次使用的地址 |
 | --- | --- | --- | --- | --- | --- |
 | fantaiying | 饭太硬 | ✅ 正常 | 50 | 5 | `http://www.饭太硬.cc/tv` |
 | feimao | 肥猫 | 📦 缓存 | | | 本次未抓到，沿用上次成功的文件 |
-| wangerxiao | 王二小 | ✅ 正常 | 100 | 2 | `https://9280.kstore.vip/newwex.json` |
+| wangerxiao | 王二小 | ✅ 正常 | 99 | 2 | `https://9280.kstore.vip/newwex.json` |
 | laoliubei | 老刘备 | ✅ 正常 | 234 | 3 | `https://raw.liucn.cc/box/m.json` |
 | xiaoma | 小马 | ✅ 正常 | 62 | 10 | `https://szyyds.cn/tv/x.json` |
 | 4k | 4K小盒子 | ✅ 正常 | 53 | 2 | `http://xhztv.top/4k.json` |
@@ -81,7 +81,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 - fantaiying: no unique site matches '茉莉多线'
 - order/影视: no site named '豆豆 · 片单'
 - order/影视: no site named '茉莉'
-- order: '豆豆 · 片单 fix升级弹幕' not listed, placed at the end
+- order: '豆豆 · 片单 Fix所有' not listed, placed at the end
 <!-- CURATED_END -->
 
 每个站点都在电视上实测过首页、分类、详情和播放。精选的配方在 `picks.json`：

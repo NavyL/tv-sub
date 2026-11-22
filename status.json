@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-22 15:02",
+ "updated": "2026-11-23 03:49",
  "sources": {
   "fantaiying": {
    "ok": true,
@@ -16,7 +16,7 @@
   "wangerxiao": {
    "ok": true,
    "url": "https://9280.kstore.vip/newwex.json",
-   "sites": 100,
+   "sites": 99,
    "lives": 2,
    "urls": 0
   },
@@ -69,7 +69,7 @@
    "fantaiying: no unique site matches '茉莉多线'",
    "order/影视: no site named '豆豆 · 片单'",
    "order/影视: no site named '茉莉'",
-   "order: '豆豆 · 片单 fix升级弹幕' not listed, placed at the end"
+   "order: '豆豆 · 片单 Fix所有' not listed, placed at the end"
   ]
  }
 }
