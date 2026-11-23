@@ -54,7 +54,8 @@
    "type": 0,
    "url": "https://navyl.github.io/tv-sub/live/live.txt",
    "epg": "https://navyl.github.io/tv-sub/live/epg.xml.gz,http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
-   "logo": "https://navyl.github.io/tv-sub/logo/{name}.png"
+   "logo": "https://navyl.github.io/tv-sub/logo/{name}.png",
+   "timeout": 10
   },
   {
    "name": "光影 · 移动IPv6",
@@ -447,7 +448,7 @@
   },
   {
    "key": "点我切源",
-   "name": "豆豆 · 片单 Fix所有",
+   "name": "豆豆 · 片单 修复扫码Bug",
    "type": 3,
    "api": "csp_DouDouGuard",
    "indexs": 1,
