@@ -172,7 +172,7 @@ def probe(url: str, timeout: int = 8):
         return (DEAD if e.code in (404, 410) else SOFT), f"http-{e.code}"
     except urllib.error.URLError as e:
         if isinstance(e.reason, socket.gaierror):
-            return DEAD, "dns"
+            return SOFT, "dns"            # some Chinese CDNs only resolve inside China: not proof of death
         return SOFT, type(e.reason).__name__
     except Exception as e:  # noqa: BLE001  timeouts, resets, bad chunked encoding ...
         return SOFT, type(e).__name__
