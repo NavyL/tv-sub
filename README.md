@@ -107,7 +107,7 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 | 江苏移动 · IPTV | cicivi/jsyd-iptv + XSFTC/MY-IPTV + 0x1301FDF/iptv | 央视 / 卫视 / 4K / 港台 | 魔百盒 OTT 流，三份列表合并 |
 | 上海移动 · IPTV | fanjunjia/SH_CMCC_IPTV + kiwi5656/CMSH.IPTV | 央视 / 卫视 / 4K / 上海 / 影视少儿 | 三份列表合并 |
 | 浙江移动 · IPTV | wzyybbo/myzjyd + XSFTC/MY-IPTV | 央视 / 卫视 / 4K / 浙江 | 单播，无 token |
-| 光影 · 直播 | 饭太硬综合直播、Kimentanm、ssili126/tv、vbskycn/iptv | 央视 / 卫视 / 4K / 港台 | 公开源合并；线路按 `host_priority` 排序，`blacklist` 里插广告的中转直接丢掉 |
+| 光影 · 直播 | 饭太硬综合直播、Kimentanm、ssili126/tv、vbskycn/iptv、Guovin/iptv-api、suxuang/myIPTV | 央视 / 卫视 / 4K / 港台 | 公开源合并，每次运行测活：死线路删掉，能出画面的排前，同一台服务器最多 2 条且相邻线路来自不同服务器；插广告的中转和串台线路丢掉 |
 | 光影 · 移动IPv6 | fanmingming/live | 央视 / 卫视 | 北京移动 IPv6 组播转发 |
 
 运营商 IPTV 列表只在对应运营商的宽带下能播，别的网络会超时，这是平台限制，不是列表坏了。
@@ -118,6 +118,9 @@ jsDelivr 的 `cdn.jsdelivr.net` 不通时可换成 `fastly.jsdelivr.net` 或 `gc
 - `outputs`：每份输出用哪些来源、要哪些分组；`extra_groups` 按名单、`source_groups` 按上游列表自己的分组名，把频道归到"上海""浙江""影视少儿"这类额外分组。
 - `rules`：频道名清洗（去掉 HD / 高清 / 频道 等后缀）、`rename`、`drop`，港台的匹配规则，卫视顺序（一线卫视在前，其余按拼音）。
 - `host_priority` / `host_priority_low` / `blacklist`：同一频道内线路的先后，以及要丢掉的主机。
+- `exclusions`：按频道的串台规则，某个频道名下命中的线路丢掉（同一台服务器的其他频道不受影响）。初始的 13 条取自 myTV 用户实测的串台记录。
+- `probe` + 输出里的 `"probe": true`：生成时测活（拉 m3u8 → 下载最新切片 → 确认是视频）。测活跑在海外的 Actions 上，所以只删各地都一样的死线路（404/410、域名不存在、空列表、返回网页、点播占位）；超时、403、429 这类可能只是锁区，保留但排在能出画面的线路后面。只对公开源合并的「光影 · 直播」开启，运营商列表在 Actions 上本来就连不通，不测。
+- 输出里的 `max_per_host`：同一台服务器每个频道最多几条，并先轮完不同服务器再排第二条，这样一条挂了，FongMi 换到的下一条是另一台服务器。
 - 频道名刻意保持简短（`CCTV1`、`湖南卫视`、`北京卫视4K`），这样台标和节目单都能直接按名字对上。
 
 **台标**：仓库 `logo/` 下镜像了 cicivi/jsyd-iptv 与 fanmingming/live 的台标，并为央视付费频道、CETV、凤凰等做了别名；`logos.py` 每次运行会给新出现、还没有台标的频道自动补图并入库。

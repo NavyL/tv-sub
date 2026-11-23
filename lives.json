@@ -23,6 +23,18 @@
       "url": "https://raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.m3u"
     },
     {
+      "id": "guovin",
+      "name": "Guovin/iptv-api",
+      "url": "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/result.m3u",
+      "_doc": "2026-11-23 加入（myTV 的主要上游）。iptv-api 自动测速后的结果，gd 分支每天更新。公司电信直连实测：光影 · 直播 52 个央视/卫视里 40 个原来一条可用线路都没有，加上它和 suxuang 后只剩 2 个。可用线路多在美国 VPS 中转（63.141.230.178、107.150.60.122、74.91.26.218），要留意插广告。"
+    },
+    {
+      "id": "suxuang",
+      "name": "suxuang/myIPTV",
+      "url": "https://raw.githubusercontent.com/suxuang/myIPTV/main/ipv4.m3u",
+      "_doc": "2026-11-23 加入（myTV 的上游之一），IPv4 合并列表。"
+    },
+    {
       "id": "fanmingming6",
       "name": "fanmingming IPv6",
       "url": "https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/ipv6.m3u"
@@ -138,13 +150,17 @@
     },
     {
       "file": "live.txt",
-      "_doc": "IPv4 合并列表，家里联通线路用",
+      "_doc": "IPv4 合并列表，任何网络可用。probe=true：每次运行测活（见顶层 probe），死线路删掉，能出视频的排前；max_per_host=2：同一台主机每台最多 2 条，且先轮完不同主机再排第二条，一条挂了下一条换的是另一台服务器。",
       "sources": [
         "zonghe",
         "kimentanm",
         "ssili126",
-        "vbskycn"
-      ]
+        "vbskycn",
+        "guovin",
+        "suxuang"
+      ],
+      "probe": true,
+      "max_per_host": 2
     },
     {
       "file": "zjyd.txt",
@@ -200,6 +216,27 @@
     "173[.]208[.]212[.]130"
   ],
   "_blacklist_doc": "2026-10-25：综合直播会插广告（用户实测），其央视线路只有 173.208.212.130（海外 VPS 中转）和 139.227.221.147（上海电信酒店源）两家，先拉黑前者；再有广告时按用户反馈继续加。",
+  "probe": {
+    "timeout": 8,
+    "workers": 32,
+    "_doc": "测活跑在 GitHub Actions（海外），所以只删各地都一样的死线路：HTTP 404/410、域名不存在、空播放列表、返回的不是视频（错误网页）、带 ENDLIST 的点播占位。超时、连接被重置、403、429 可能只是锁区或限流，保留但排在能出视频的线路后面。每台频道只测排名前 max_lines*3 条。"
+  },
+  "exclusions": [
+    {"channel": "CCTV13", "url": "ali-m-l[.]cztv[.]com", "_doc": "播的是浙江中国蓝新闻（myTV 用户截图确认）"},
+    {"channel": "CCTV5", "url": "183[.]250[.]156[.]180"},
+    {"channel": "CCTV5", "url": "113[.]98[.]11[.]46"},
+    {"channel": "CCTV6", "url": "183[.]250[.]156[.]180"},
+    {"channel": "CCTV7", "url": "221[.]226[.]51[.]220"},
+    {"channel": "CCTV8", "url": "183[.]250[.]156[.]180"},
+    {"channel": "CCTV8", "url": "63[.]141[.]230[.]178"},
+    {"channel": "CCTV9", "url": "183[.]250[.]156[.]180"},
+    {"channel": "CCTV9", "url": "221[.]226[.]51[.]220"},
+    {"channel": "CCTV10", "url": "183[.]250[.]156[.]180"},
+    {"channel": "CCTV16", "url": "183[.]250[.]156[.]180"},
+    {"channel": "CCTV16", "url": "221[.]226[.]51[.]220"},
+    {"channel": "广东卫视", "url": "183[.]250[.]156[.]180"}
+  ],
+  "_exclusions_doc": "按频道的串台规则：这个频道名下命中 url 正则的线路丢掉（同一主机的其他频道不受影响）。2026-11-23 取自 myTV 4.9.24 内置的 source_exclusions.json（他的用户实测串台：CCTV5/6/8/9/10/16 在 183.250.156.180 上互相串，等等）。自己发现串台也加在这里。",
   "rules": {
     "hk_tw": [
       "^凤凰",
@@ -305,7 +342,20 @@
       "中国教育-1": "中国教育1台",
       "中国教育-2": "中国教育2台",
       "中国教育-4": "中国教育4台",
-      "都市": "都市频道"
+      "都市": "都市频道",
+      "TVB翡翠台": "翡翠台",
+      "TVB明珠台": "明珠台",
+      "TVB无线新闻": "无线新闻",
+      "TVB无线新闻台": "无线新闻",
+      "无线新闻台": "无线新闻",
+      "无线星河": "TVB星河",
+      "TVB娱乐新闻台": "TVB娱乐新闻",
+      "TVBS新闻台": "TVBS新闻",
+      "凤凰卫视": "凤凰中文",
+      "凤凰卫视台": "凤凰中文",
+      "凤凰卫视中文台": "凤凰中文",
+      "凤凰卫视资讯台": "凤凰资讯",
+      "凤凰卫视香港台": "凤凰香港"
     },
     "drop": [
       "人间卫视",

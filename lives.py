@@ -3,17 +3,21 @@
 
 Reads lives.json (sources, groups, line priority, blacklist), fetches every
 list, classifies channels into 央视 / 卫视 / 4K / 港台, merges all lines of the
-same channel (ordered by host priority, blacklisted hosts dropped) and writes
-FongMi txt lists:  group,#genre#  then  name,url1#url2#...
+same channel (ordered by host priority, blacklisted hosts and per-channel
+exclusions dropped) and writes FongMi txt lists:  group,#genre#  then  name,url1#url2#...
+Outputs with "probe": true are liveness-checked: dead lines are dropped, lines that
+answered with real video go first, and consecutive lines come from different hosts.
 """
 import concurrent.futures as cf
 import json
 import os
 import re
+import socket
 import ssl
 import sys
+import urllib.error
 import urllib.request
-from urllib.parse import urlparse
+from urllib.parse import quote, urljoin, urlparse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -61,6 +65,8 @@ def canon(raw: str, rules: dict):
     """Return (group, display_name) or None when the channel is not wanted."""
     n = re.sub(r"[\s　]", "", raw)
     n = re.sub(r"(?i)(MAX)?[\d.]+M(1080|2160|720)P?$", "", n)      # bitrate tags like "Max4.5M1080"
+    n = re.sub(r"[（(][^）)]*[）)]$", "", n)                         # "TVB翡翠台（备用）"
+    n = re.sub(r"(?i)(1080|720|576|2160)[PI]$", "", n)               # "TVB翡翠台1080P"
     n = re.sub(r"(?i)(ipv[46]|高清|超清|标清|hd|fhd|蓝光|频道)$", "", n)
     n = n.replace("—", "-").replace("－", "-").replace("＋", "+").strip("-·")
     n = rules.get("rename", {}).get(n, n)
@@ -108,6 +114,89 @@ def canon(raw: str, rules: dict):
     if m:
         return "卫视", f"中国教育{m.group(2)}台"
     return None
+
+
+def excluded(name: str, url: str, rules: list) -> bool:
+    """Per-channel exclusions: a host that plays the wrong channel for this name (串台)."""
+    return any(r["channel"] == name and re.search(r["url"], url) for r in rules)
+
+
+# ---- liveness probe (only for outputs with "probe": true) -------------------------------------
+# Runs on GitHub Actions (outside China), so only failures that are the same from every network
+# count as dead. Timeouts, resets, 403 and 429 may just be geo/rate limits and are kept, ranked
+# after lines that answered with real video.
+OK, SOFT, DEAD = 0, 1, 2
+
+
+def _get(url: str, limit: int, timeout: int):
+    req = urllib.request.Request(quote(url, safe=":/?#[]@!$&'()*+,;=%~"), headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        buf = b""
+        while len(buf) < limit:
+            chunk = r.read(65536)
+            if not chunk:
+                break
+            buf += chunk
+        return r.geturl(), buf
+
+
+def _is_media(b: bytes) -> bool:
+    if len(b) < 1000:
+        return False
+    return (b[:1] == b"\x47" and (len(b) < 189 or b[188:189] == b"\x47")      # MPEG-TS
+            or b[4:8] in (b"ftyp", b"styp", b"moof", b"sidx")                 # fMP4
+            or b[:3] in (b"FLV", b"ID3") or b[:2] == b"\xff\xf1")             # FLV, AAC audio segment
+
+
+def probe(url: str, timeout: int = 8):
+    """Return (state, reason): fetch the playlist, then its newest segment, and check it is video."""
+    try:
+        final, body = _get(url, 300_000, timeout)
+        text = body[:200_000].decode("utf-8", "replace")
+        if "#EXTM3U" not in text[:300]:
+            return (OK, "stream") if _is_media(body) else (DEAD, "not-media")
+        if "#EXT-X-STREAM-INF" in text:                                          # master playlist -> first variant
+            var = next((l.strip() for l in text.splitlines() if l.strip() and not l.startswith("#")), None)
+            if not var:
+                return DEAD, "empty-master"
+            final, body = _get(urljoin(final, var), 300_000, timeout)
+            text = body.decode("utf-8", "replace")
+        segs = [l.strip() for l in text.splitlines() if l.strip() and not l.startswith("#")]
+        if not segs:
+            return DEAD, "empty-playlist"
+        if "#EXT-X-ENDLIST" in text:
+            return DEAD, "vod-placeholder"                                       # a fixed clip, not a live stream
+        _, seg = _get(urljoin(final, segs[-1]), 200_000, timeout)
+        return (OK, "hls") if _is_media(seg) else (DEAD, "segment-not-media")
+    except urllib.error.HTTPError as e:
+        return (DEAD if e.code in (404, 410) else SOFT), f"http-{e.code}"
+    except urllib.error.URLError as e:
+        if isinstance(e.reason, socket.gaierror):
+            return DEAD, "dns"
+        return SOFT, type(e.reason).__name__
+    except Exception as e:  # noqa: BLE001  timeouts, resets, bad chunked encoding ...
+        return SOFT, type(e).__name__
+
+
+def probe_all(urls, cfg: dict):
+    timeout, workers = cfg.get("timeout", 8), cfg.get("workers", 32)
+    with cf.ThreadPoolExecutor(workers) as ex:
+        return dict(zip(urls, ex.map(lambda u: probe(u, timeout), urls)))
+
+
+def spread(lines, tier, max_lines: int, per_host: int):
+    """lines are sorted best-first. Keep at most per_host lines per host and order by
+    (probe tier, n-th line of its host, original order): healthy lines first, and within a tier
+    every host's best line before any host's second one, so a failing line is followed by a
+    different server."""
+    nth, keep = {}, []
+    for i, u in enumerate(lines):
+        h = urlparse(u).hostname or ""
+        n = nth.get(h, 0)
+        if per_host is None or n < per_host:
+            nth[h] = n + 1
+            keep.append((tier(u), n, i, u))
+    return [u for *_, u in sorted(keep)][:max_lines]
 
 
 def host_rank(url: str, prio: list, low: list, black: list):
@@ -176,11 +265,25 @@ def build(output: dict, recipe: dict, src_text: dict):
             if not c or c[0] not in groups or url in seen or ";" in url or "*" in url:
                 continue
             rank = host_rank(url, prio, low, black)
-            if rank is None:
+            if rank is None or excluded(c[1], url, recipe.get("exclusions", [])):
                 continue
             seen.add(url)
             order += 1
             chans.setdefault(c, []).append((rank, order, url))
+    max_lines = recipe.get("max_lines", 8)
+    per_host = output.get("max_per_host")        # host spreading is opt-in; operator lists keep their order
+    state = {}
+    if output.get("probe"):
+        # probe only what could make it into the list: the best few lines of each channel per host
+        cand = []
+        for k, v in chans.items():
+            cand += spread([u for *_, u in sorted(v)], lambda u: 0, max_lines * 3, per_host or 3)
+        state = probe_all(cand, recipe.get("probe", {}))
+        for k in list(chans):
+            chans[k] = [x for x in chans[k] if x[2] in state and state[x[2]][0] != DEAD]
+            if not chans[k]:
+                del chans[k]                                   # every line is dead: drop the channel
+    tier = lambda u: state[u][0] if u in state else 0
     lines = []
     total = 0
     for g in groups:
@@ -189,11 +292,13 @@ def build(output: dict, recipe: dict, src_text: dict):
             continue
         lines.append(f"{g},#genre#")
         for k in items:
-            urls = [u for _, _, u in sorted(chans[k])][: recipe.get("max_lines", 8)]
+            ranked = [u for *_, u in sorted(chans[k])]
+            urls = spread(ranked, tier, max_lines, per_host) if per_host or state else ranked[:max_lines]
             lines.append(f"{k[1]},{'#'.join(urls)}")
             total += 1
         lines.append("")
-    return "\n".join(lines).rstrip("\n") + "\n", total, {g: sum(1 for k in chans if k[0] == g) for g in groups}
+    per = {g: sum(1 for k in chans if k[0] == g) for g in groups}
+    return "\n".join(lines).rstrip("\n") + "\n", total, per, state
 
 
 def main():
@@ -226,7 +331,13 @@ def main():
         if not any(src_text.get(s) for s in out["sources"]):
             print(f"{out['file']}: all sources failed, keeping previous file")
             continue
-        text, total, per = build(out, recipe, src_text)
+        text, total, per, state = build(out, recipe, src_text)
+        if state:
+            tally = {}
+            for st, why in state.values():
+                key = ("ok", "soft", "dead")[st] + ":" + why
+                tally[key] = tally.get(key, 0) + 1
+            print(f"{out['file']}: probed {len(state)} lines -> " + ", ".join(f"{k} {v}" for k, v in sorted(tally.items(), key=lambda kv: -kv[1])))
         old = open(path, encoding="utf-8").read() if os.path.exists(path) else None
         if text != old:
             with open(path, "w", encoding="utf-8", newline="\n") as f:

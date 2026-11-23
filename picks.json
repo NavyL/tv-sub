@@ -205,7 +205,8 @@
         "url": "https://navyl.github.io/tv-sub/live/live.txt",
         "epg": "https://navyl.github.io/tv-sub/live/epg.xml.gz,http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
         "logo": "https://navyl.github.io/tv-sub/logo/{name}.png",
-        "_doc": "lives.py 合并 综合直播/Kimentanm/ssili126/vbskycn，只留 央视/卫视/4K/港台，插广告的中转按 lives.json blacklist 丢掉"
+        "timeout": 10,
+        "_doc": "lives.py 合并 综合直播/Kimentanm/ssili126/vbskycn/Guovin/suxuang，只留 央视/卫视/4K/港台，插广告的中转按 lives.json blacklist 丢掉，串台按 exclusions 丢掉，每次运行测活。timeout 10：起播 10 秒还没画面就换下一条（FongMi 直播条目的 timeout 字段，单位秒），线路多了以后坏线路不会卡太久"
       },
       {
         "name": "光影 · 移动IPv6",
