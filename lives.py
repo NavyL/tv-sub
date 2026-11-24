@@ -15,6 +15,7 @@ import re
 import socket
 import ssl
 import sys
+import time
 import urllib.error
 import urllib.request
 from urllib.parse import quote, urljoin, urlparse
@@ -128,11 +129,15 @@ def excluded(name: str, url: str, rules: list) -> bool:
 OK, SOFT, DEAD = 0, 1, 2
 
 
-def _get(url: str, limit: int, timeout: int):
+def _get(url: str, limit: int, timeout: int, budget: float = 0):
+    """Read up to limit bytes; with budget (seconds) stop reading once that much time has passed."""
     req = urllib.request.Request(quote(url, safe=":/?#[]@!$&'()*+,;=%~"), headers={"User-Agent": UA})
+    t0 = time.monotonic()
     with urllib.request.urlopen(req, timeout=timeout) as r:
         buf = b""
         while len(buf) < limit:
+            if budget and time.monotonic() - t0 > budget:
+                break
             chunk = r.read(65536)
             if not chunk:
                 break
@@ -148,40 +153,55 @@ def _is_media(b: bytes) -> bool:
             or b[:3] in (b"FLV", b"ID3") or b[:2] == b"\xff\xf1")             # FLV, AAC audio segment
 
 
-def probe(url: str, timeout: int = 8):
-    """Return (state, reason): fetch the playlist, then its newest segment, and check it is video."""
+def probe(url: str, timeout: int = 8, measure: bool = False):
+    """Return (state, reason, ratio): fetch the playlist, then its newest segment, and check it is
+    video. With measure=True the whole segment is downloaded and ratio = segment duration /
+    download time (>1 means it downloads faster than it plays); otherwise ratio is None."""
     try:
-        final, body = _get(url, 300_000, timeout)
+        t0 = time.monotonic()
+        final, body = _get(url, 300_000, timeout, budget=4 if measure else 0)
         text = body[:200_000].decode("utf-8", "replace")
         if "#EXTM3U" not in text[:300]:
-            return (OK, "stream") if _is_media(body) else (DEAD, "not-media")
+            if not _is_media(body):
+                return DEAD, "not-media", None
+            # progressive stream (flv/ts): bytes per second vs. a nominal 4 Mbit/s 1080p stream
+            dt = max(time.monotonic() - t0, 0.05)
+            return OK, "stream", (round(len(body) * 8 / dt / 4e6, 2) if measure and len(body) >= 300_000 else None)
         if "#EXT-X-STREAM-INF" in text:                                          # master playlist -> first variant
             var = next((l.strip() for l in text.splitlines() if l.strip() and not l.startswith("#")), None)
             if not var:
-                return DEAD, "empty-master"
+                return DEAD, "empty-master", None
             final, body = _get(urljoin(final, var), 300_000, timeout)
             text = body.decode("utf-8", "replace")
         segs = [l.strip() for l in text.splitlines() if l.strip() and not l.startswith("#")]
         if not segs:
-            return DEAD, "empty-playlist"
+            return DEAD, "empty-playlist", None
         if "#EXT-X-ENDLIST" in text:
-            return DEAD, "vod-placeholder"                                       # a fixed clip, not a live stream
-        _, seg = _get(urljoin(final, segs[-1]), 200_000, timeout)
-        return (OK, "hls") if _is_media(seg) else (DEAD, "segment-not-media")
+            return DEAD, "vod-placeholder", None                                 # a fixed clip, not a live stream
+        durs = re.findall(r"#EXTINF:\s*([\d.]+)", text)
+        t1 = time.monotonic()
+        _, seg = _get(urljoin(final, segs[-1]), 12_000_000 if measure else 200_000, timeout,
+                      budget=20 if measure else 0)
+        if not _is_media(seg):
+            return DEAD, "segment-not-media", None
+        ratio = None
+        if measure and durs:
+            ratio = round(float(durs[-1]) / max(time.monotonic() - t1, 0.05), 2)
+        return OK, "hls", ratio
     except urllib.error.HTTPError as e:
-        return (DEAD if e.code in (404, 410) else SOFT), f"http-{e.code}"
+        return (DEAD if e.code in (404, 410) else SOFT), f"http-{e.code}", None
     except urllib.error.URLError as e:
         if isinstance(e.reason, socket.gaierror):
-            return SOFT, "dns"            # some Chinese CDNs only resolve inside China: not proof of death
-        return SOFT, type(e.reason).__name__
+            return SOFT, "dns", None      # some Chinese CDNs only resolve inside China: not proof of death
+        return SOFT, type(e.reason).__name__, None
     except Exception as e:  # noqa: BLE001  timeouts, resets, bad chunked encoding ...
-        return SOFT, type(e).__name__
+        return SOFT, type(e).__name__, None
 
 
-def probe_all(urls, cfg: dict):
+def probe_all(urls, cfg: dict, measure: bool = False):
     timeout, workers = cfg.get("timeout", 8), cfg.get("workers", 32)
     with cf.ThreadPoolExecutor(workers) as ex:
-        return dict(zip(urls, ex.map(lambda u: probe(u, timeout), urls)))
+        return dict(zip(urls, ex.map(lambda u: probe(u, timeout, measure), urls)))
 
 
 def spread(lines, tier, max_lines: int, per_host: int):
@@ -247,10 +267,11 @@ def sat_key(name: str, rules: dict):
     return (2, 0, name)
 
 
-def build(output: dict, recipe: dict, src_text: dict):
+def collect(output: dict, recipe: dict, src_text: dict):
+    """(group, name) -> list of (rank, order, url): every wanted line, before probing."""
     rules, prio, low, black = recipe["rules"], recipe["host_priority"], recipe.get("host_priority_low", []), recipe["blacklist"]
     groups = output.get("groups") or recipe["groups"]
-    chans = {}            # (group, name) -> list of (rank, order, url)
+    chans = {}
     seen = set()
     order = 0
     for sid in output["sources"]:
@@ -270,20 +291,49 @@ def build(output: dict, recipe: dict, src_text: dict):
             seen.add(url)
             order += 1
             chans.setdefault(c, []).append((rank, order, url))
+    return chans
+
+
+def candidates(chans: dict, output: dict, recipe: dict):
+    """The lines worth probing: the best few of each channel, at most per_host per host."""
+    max_lines, per_host = recipe.get("max_lines", 8), output.get("max_per_host")
+    cand = []
+    for v in chans.values():
+        cand += spread([u for *_, u in sorted(v)], lambda u: 0, max_lines * 3, per_host or 3)
+    return cand
+
+
+def health_tier(h: dict):
+    """Rank from the China-side probe history (health.py on the Tencent Cloud Shanghai server):
+    0 = plays >=80% of the time and downloads >=1.5x real time, 1 = plays >=50%, 2 = sometimes,
+    3 = never in the window. None when there are fewer than 3 samples."""
+    if not h or h.get("n", 0) < 3:
+        return None
+    rate, ratio = h["ok"] / h["n"], h.get("ratio")
+    if rate >= 0.8 and (ratio is None or ratio >= 1.5):
+        return 0
+    return 1 if rate >= 0.5 else 2 if rate > 0 else 3
+
+
+def build(output: dict, recipe: dict, src_text: dict, health: dict = None):
+    rules = recipe["rules"]
+    groups = output.get("groups") or recipe["groups"]
+    chans = collect(output, recipe, src_text)
     max_lines = recipe.get("max_lines", 8)
     per_host = output.get("max_per_host")        # host spreading is opt-in; operator lists keep their order
     state = {}
     if output.get("probe"):
-        # probe only what could make it into the list: the best few lines of each channel per host
-        cand = []
-        for k, v in chans.items():
-            cand += spread([u for *_, u in sorted(v)], lambda u: 0, max_lines * 3, per_host or 3)
-        state = probe_all(cand, recipe.get("probe", {}))
+        state = probe_all(candidates(chans, output, recipe), recipe.get("probe", {}))
         for k in list(chans):
             chans[k] = [x for x in chans[k] if x[2] in state and state[x[2]][0] != DEAD]
             if not chans[k]:
                 del chans[k]                                   # every line is dead: drop the channel
-    tier = lambda u: state[u][0] if u in state else 0
+    health = health if output.get("probe") else None
+    def tier(u):
+        if health:                                             # China-side history decides when it has data;
+            t = health_tier(health.get(u))                     # lines it has not seen yet sit in the middle
+            return t if t is not None else (1 if state.get(u, (OK,))[0] == OK else 2)
+        return state[u][0] if u in state else 0
     lines = []
     total = 0
     for g in groups:
@@ -299,6 +349,23 @@ def build(output: dict, recipe: dict, src_text: dict):
         lines.append("")
     per = {g: sum(1 for k in chans if k[0] == g) for g in groups}
     return "\n".join(lines).rstrip("\n") + "\n", total, per, state
+
+
+def load_health(cfg: dict):
+    """Per-URL history from the China-side prober, or None when missing or stale."""
+    if not cfg.get("url"):
+        return None
+    try:
+        h = json.loads(fetch(cfg["url"], timeout=20))
+        age_h = (time.time() - h["generated_ts"]) / 3600
+        if age_h > cfg.get("max_age_hours", 12):
+            print(f"health: stale ({age_h:.1f} h old), ignored")
+            return None
+        print(f"health: {len(h['urls'])} lines from {h.get('vantage', '?')}, {age_h:.1f} h old")
+        return h["urls"]
+    except Exception as e:  # noqa: BLE001
+        print(f"health: unavailable ({e}), using the Actions probe only")
+        return None
 
 
 def main():
@@ -324,6 +391,7 @@ def main():
                 fb = local(s) if s.get("file") else None
                 src_text[s["id"]] = fb
                 print(f"{s['id']:12s} FAIL {e}" + (f" -> fallback file {len(fb)} bytes" if fb else ""))
+    health = load_health(recipe.get("health", {}))
     changed = False
     for out in recipe["outputs"]:
         path = os.path.join(out_dir, out["file"])
@@ -331,10 +399,10 @@ def main():
         if not any(src_text.get(s) for s in out["sources"]):
             print(f"{out['file']}: all sources failed, keeping previous file")
             continue
-        text, total, per, state = build(out, recipe, src_text)
+        text, total, per, state = build(out, recipe, src_text, health)
         if state:
             tally = {}
-            for st, why in state.values():
+            for st, why, _ in state.values():
                 key = ("ok", "soft", "dead")[st] + ":" + why
                 tally[key] = tally.get(key, 0) + 1
             print(f"{out['file']}: probed {len(state)} lines -> " + ", ".join(f"{k} {v}" for k, v in sorted(tally.items(), key=lambda kv: -kv[1])))
