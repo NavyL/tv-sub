@@ -392,6 +392,7 @@ def main():
                 src_text[s["id"]] = fb
                 print(f"{s['id']:12s} FAIL {e}" + (f" -> fallback file {len(fb)} bytes" if fb else ""))
     health = load_health(recipe.get("health", {}))
+    cands = {}            # probed output -> candidate lines, for the China-side prober (health.py)
     changed = False
     for out in recipe["outputs"]:
         path = os.path.join(out_dir, out["file"])
@@ -400,6 +401,8 @@ def main():
             print(f"{out['file']}: all sources failed, keeping previous file")
             continue
         text, total, per, state = build(out, recipe, src_text, health)
+        if out.get("probe"):
+            cands[out["file"]] = list(state)
         if state:
             tally = {}
             for st, why, _ in state.values():
@@ -412,6 +415,14 @@ def main():
                 f.write(text)
             changed = True
         print(f"{out['file']}: {total} channels {per}{' (changed)' if text != old else ''}")
+    if cands:
+        # committed so the server gets it with `git pull` over SSH (github raw is unreliable from China)
+        path = os.path.join(out_dir, "candidates.json")
+        new = json.dumps(cands, ensure_ascii=False, indent=0)
+        old = open(path, encoding="utf-8").read() if os.path.exists(path) else None
+        if new != old:
+            with open(path, "w", encoding="utf-8", newline="\n") as f:
+                f.write(new)
     return 0
 
 

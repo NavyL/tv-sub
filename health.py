@@ -55,11 +55,25 @@ def main():
 
     recipe = json.load(open(os.path.join(HERE, "lives.json"), encoding="utf-8"))
     outputs = [o for o in recipe["outputs"] if o.get("probe")]
-    src_text = fetch_sources(recipe, {s for o in outputs for s in o["sources"]})
-    cand = []
-    for o in outputs:
-        cand += lives.candidates(lives.collect(o, recipe, src_text), o, recipe)
+    cpath = os.path.join(HERE, "live", "candidates.json")
+    if os.path.exists(cpath):
+        # written by lives.py on Actions and pulled with the repo: exactly the lines lives.py ranks
+        cand = [u for o in outputs for u in json.load(open(cpath, encoding="utf-8")).get(o["file"], [])]
+        print(f"candidates: {len(cand)} from live/candidates.json")
+    else:
+        ids = {s for o in outputs for s in o["sources"]}
+        src_text = fetch_sources(recipe, ids)
+        missing = sorted(i for i in ids if i not in src_text and any(s["id"] == i and s.get("url") for s in recipe["sources"]))
+        if missing:
+            print(f"sources not fetched: {missing}; not publishing a partial result")
+            return 1
+        cand = []
+        for o in outputs:
+            cand += lives.candidates(lives.collect(o, recipe, src_text), o, recipe)
     cand = list(dict.fromkeys(cand))
+    if not cand:
+        print("no candidates; nothing to do")
+        return 1
     t0 = time.time()
     res = lives.probe_all(cand, recipe.get("probe", {}), measure=True)
     now = int(time.time())
