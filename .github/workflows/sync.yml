@@ -94,3 +94,18 @@ jobs:
 
       - uses: actions/deploy-pages@v4
         id: pages
+
+      # Heartbeat of the China-side prober (health.py). Runs last so nothing else waits on it;
+      # a stale health.json fails the run, and GitHub emails the repository owner.
+      - name: Check China-side prober
+        run: |
+          python - <<'EOF'
+          import json, sys, time, urllib.request
+          cfg = json.load(open("lives.json", encoding="utf-8"))["health"]
+          h = json.load(urllib.request.urlopen(cfg["url"], timeout=30))
+          age = (time.time() - h["generated_ts"]) / 3600
+          print(f"health.json: {len(h['urls'])} lines, {age:.1f} h old")
+          if age > cfg["max_age_hours"]:
+              print(f"::error::probe-data/health.json is {age:.1f} h old (limit {cfg['max_age_hours']} h): the China-side prober has stopped")
+              sys.exit(1)
+          EOF

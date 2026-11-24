@@ -329,6 +329,20 @@ def build(output: dict, recipe: dict, src_text: dict, health: dict = None):
             if not chans[k]:
                 del chans[k]                                   # every line is dead: drop the channel
     health = health if output.get("probe") else None
+    if health:
+        # a full window without a single success from China: drop the line (it is still probed,
+        # because candidates come from collect(), so it returns as soon as it plays again)
+        need = recipe.get("health", {}).get("drop_after", 8)
+        never = lambda u: (h := health.get(u)) is not None and h["n"] >= need and h["ok"] == 0
+        dropped = 0
+        for k in list(chans):
+            keep = [x for x in chans[k] if not never(x[2])]
+            dropped += len(chans[k]) - len(keep)
+            if keep:
+                chans[k] = keep
+            else:
+                del chans[k]
+        print(f"{output['file']}: dropped {dropped} lines that never played from China in the last {need} probes")
     def tier(u):
         if health:                                             # China-side history decides when it has data;
             t = health_tier(health.get(u))                     # lines it has not seen yet sit in the middle
@@ -402,7 +416,7 @@ def main():
             continue
         text, total, per, state = build(out, recipe, src_text, health)
         if out.get("probe"):
-            cands[out["file"]] = list(state)
+            cands[out["file"]] = [u for u, s in state.items() if s[0] != DEAD]
         if state:
             tally = {}
             for st, why, _ in state.values():
