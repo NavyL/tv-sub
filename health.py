@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """China-side line health for the probed live lists (lives.json outputs with "probe": true).
 
-Runs on the Tencent Cloud Shanghai server every 3 hours (systemd timer tvsub-probe, see
+Runs on a China-side server every 3 hours (systemd timer tvsub-probe, see
 /opt/tvsub-probe/README.md on the server). Each run probes the same candidate lines lives.py
 would probe, but from inside China and with speed measured (whole newest segment downloaded),
 appends the results to a rolling history, and publishes health.json: per URL the number of
@@ -49,7 +49,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--state", required=True, help="directory for history.json and the data checkout")
     ap.add_argument("--push", help="git remote to force-push health.json to (branch probe-data)")
-    ap.add_argument("--vantage", default="tencent-cloud-shanghai")
+    ap.add_argument("--vantage", default="cn")
     a = ap.parse_args()
     os.makedirs(a.state, exist_ok=True)
 

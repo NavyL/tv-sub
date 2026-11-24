@@ -304,7 +304,7 @@ def candidates(chans: dict, output: dict, recipe: dict):
 
 
 def health_tier(h: dict):
-    """Rank from the China-side probe history (health.py on the Tencent Cloud Shanghai server):
+    """Rank from the China-side probe history (health.py on a China-side server):
     0 = plays >=80% of the time and downloads >=1.5x real time, 1 = plays >=50%, 2 = sometimes,
     3 = never in the window. None when there are fewer than 3 samples."""
     if not h or h.get("n", 0) < 3:
