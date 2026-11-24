@@ -224,7 +224,7 @@
   "health": {
     "url": "https://raw.githubusercontent.com/NavyL/tv-sub/probe-data/health.json",
     "max_age_hours": 12,
-    "_doc": "国内测活结果：腾讯云上海服务器每 2 小时跑 health.py（systemd timer tvsub-probe），测同一批候选线路并量速度，累积 24 小时，强推到 probe-data 分支。有新鲜数据时（12 小时内），probe 输出按它排序：近 24 小时 >=80% 能播且下载 >=1.5 倍速的最前，>=50% 次之，偶尔能播再次，从没播成功的最后（不删，机房 IP 可能被个别源屏蔽而家里能播）。还没测过的新线路排在中间。Actions 自己测出的死线路照样删。"
+    "_doc": "国内测活结果：腾讯云上海服务器每 3 小时跑 health.py（systemd timer tvsub-probe），测同一批候选线路并量速度，累积 24 小时，强推到 probe-data 分支。有新鲜数据时（12 小时内），probe 输出按它排序：近 24 小时 >=80% 能播且下载 >=1.5 倍速的最前，>=50% 次之，偶尔能播再次，从没播成功的最后（不删，机房 IP 可能被个别源屏蔽而家里能播）。还没测过的新线路排在中间。Actions 自己测出的死线路照样删。"
   },
   "exclusions": [
     {"channel": "CCTV13", "url": "ali-m-l[.]cztv[.]com", "_doc": "播的是浙江中国蓝新闻（myTV 用户截图确认）"},

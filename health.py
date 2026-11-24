@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """China-side line health for the probed live lists (lives.json outputs with "probe": true).
 
-Runs on the Tencent Cloud Shanghai server every 2 hours (systemd timer tvsub-probe, see
+Runs on the Tencent Cloud Shanghai server every 3 hours (systemd timer tvsub-probe, see
 /opt/tvsub-probe/README.md on the server). Each run probes the same candidate lines lives.py
 would probe, but from inside China and with speed measured (whole newest segment downloaded),
 appends the results to a rolling history, and publishes health.json: per URL the number of
@@ -11,7 +11,7 @@ lives.py on GitHub Actions reads health.json (lives.json "health") to rank lines
   python3 health.py --state DIR [--push git@github.com:OWNER/REPO.git]
 
 --push force-pushes a single orphan commit with health.json to the branch probe-data, so main
-does not collect a commit every 2 hours.
+does not collect a commit every run.
 """
 import argparse
 import concurrent.futures as cf
