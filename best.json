@@ -50,7 +50,7 @@
    "logo": "https://navyl.github.io/tv-sub/logo/{name}.png"
   }
  ],
- "wallpaper": "https://navyl.github.io/tv-sub/wallpaper/1.webp",
+ "wallpaper": "https://navyl.github.io/tv-sub/wallpaper/2.webp",
  "sites": [
   {
    "key": "wangerxiao_玩偶",
@@ -131,7 +131,7 @@
    "searchable": 1,
    "quickSearch": 1,
    "filterable": 1,
-   "jar": "https://ss1.eisite.cn/autoupload/f/eja2s/20261102/WU58/0X0/fm261102c.png;md5;6a396033ae45efee57ba789f91d7123e"
+   "jar": "https://img2.gelonghui.com/library/252d4-9c2ceac7-d615-4058-98ab-fe13818b0ce4.png;md5;252d4d890b6e61a4cd29c3b67f4b8a30"
   },
   {
    "key": "wangerxiao_WexAiBoBo",
@@ -170,7 +170,7 @@
     "version": "1.0.0.3",
     "decrypt": "0"
    },
-   "jar": "https://ss1.eisite.cn/autoupload/f/eja2s/20261102/WU58/0X0/fm261102c.png;md5;6a396033ae45efee57ba789f91d7123e"
+   "jar": "https://img2.gelonghui.com/library/252d4-9c2ceac7-d615-4058-98ab-fe13818b0ce4.png;md5;252d4d890b6e61a4cd29c3b67f4b8a30"
   },
   {
    "key": "feimao_再来",
@@ -188,7 +188,7 @@
     "version": "3.0.0.7",
     "decrypt": "0"
    },
-   "jar": "https://ss1.eisite.cn/autoupload/f/eja2s/20261102/WU58/0X0/fm261102c.png;md5;6a396033ae45efee57ba789f91d7123e"
+   "jar": "https://img2.gelonghui.com/library/252d4-9c2ceac7-d615-4058-98ab-fe13818b0ce4.png;md5;252d4d890b6e61a4cd29c3b67f4b8a30"
   },
   {
    "key": "厂长",
@@ -208,7 +208,7 @@
    "api": "csp_SaoHuo",
    "playerType": 2,
    "ext": "https://shdy5.us",
-   "jar": "https://ss1.eisite.cn/autoupload/f/eja2s/20261102/WU58/0X0/fm261102c.png;md5;6a396033ae45efee57ba789f91d7123e"
+   "jar": "https://img2.gelonghui.com/library/252d4-9c2ceac7-d615-4058-98ab-fe13818b0ce4.png;md5;252d4d890b6e61a4cd29c3b67f4b8a30"
   },
   {
    "key": "xiaohezi_360",
@@ -270,7 +270,7 @@
    "name": "韩圈",
    "type": 3,
    "api": "csp_Hxq",
-   "jar": "https://ss1.eisite.cn/autoupload/f/eja2s/20261102/WU58/0X0/fm261102c.png;md5;6a396033ae45efee57ba789f91d7123e"
+   "jar": "https://img2.gelonghui.com/library/252d4-9c2ceac7-d615-4058-98ab-fe13818b0ce4.png;md5;252d4d890b6e61a4cd29c3b67f4b8a30"
   },
   {
    "key": "wangerxiao_花卷",
