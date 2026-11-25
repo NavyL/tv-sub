@@ -1,6 +1,6 @@
 {
  "schemaVersion": 1,
  "label": "配置源",
- "message": "9/9 可用",
- "color": "brightgreen"
+ "message": "8/9 可用",
+ "color": "yellow"
 }

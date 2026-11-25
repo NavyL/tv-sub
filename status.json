@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-25 14:49",
+ "updated": "2026-11-25 16:50",
  "sources": {
   "fantaiying": {
    "ok": true,
@@ -9,11 +9,9 @@
    "urls": 0
   },
   "feimao": {
-   "ok": true,
-   "url": "http://肥猫.net/tv",
-   "sites": 41,
-   "lives": 1,
-   "urls": 0
+   "ok": false,
+   "error": "http://肥猫.net/tv: ConnectionResetError: [Errno 104] Connection reset by peer",
+   "cached": true
   },
   "wangerxiao": {
    "ok": true,
@@ -66,12 +64,12 @@
   }
  },
  "curated": {
-  "sites": 32,
+  "sites": 31,
   "warnings": [
+   "fantaiying: no unique site matches '豆豆片单'",
    "fantaiying: no unique site matches '茉莉多线'",
    "order/影视: no site named '豆豆 · 片单'",
-   "order/影视: no site named '茉莉'",
-   "order: '豆豆 · 片单 修复扫码BUG' not listed, placed at the end"
+   "order/影视: no site named '茉莉'"
   ]
  }
 }

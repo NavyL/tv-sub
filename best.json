@@ -1,5 +1,5 @@
 {
- "spider": "https://xiuxiu-pro-new.meitudata.com/posters/6ab5e75b83570d4213bdbbddca1b4c2a.jpg;md5;ca298c77d2c40a8268c505d7b3194e49",
+ "spider": "https://xiuxiu-pro-new.meitudata.com/posters/554e1b7b2e64ade4ffab3d1c9881890f.jpg;md5;9966f0c40f3a7f2cd351ecedf642e067",
  "logo": "https://bdcache1-f1.v3mh.com/image/25-12-16/6941612717007.gif",
  "hosts": [
   "fiizvfck.top=cmcc.vvvv.ee",
@@ -430,16 +430,6 @@
    "ext": {
     "Cloud-drive": "tvfan/Cloud-drive.txt"
    }
-  },
-  {
-   "key": "点我切源",
-   "name": "豆豆 · 片单 修复扫码BUG",
-   "type": 3,
-   "api": "csp_DouDouGuard",
-   "indexs": 1,
-   "searchable": 0,
-   "quickSearch": 0,
-   "changeable": 0
   }
  ]
 }
