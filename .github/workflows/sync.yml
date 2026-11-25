@@ -59,7 +59,12 @@ jobs:
             git config user.name  "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "sync $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git push
+            # another run or a manual push may have landed meanwhile: replay on top, keeping this run's generated files
+            for i in 1 2 3; do
+              git push && break
+              [ "$i" = 3 ] && exit 1
+              git pull --rebase -X theirs || exit 1
+            done
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
@@ -95,8 +100,21 @@ jobs:
         with:
           path: site
 
+      # deploy-pages sometimes looks the artifact up before GitHub's API lists it
+      # ("Fetching artifact metadata failed", 3 of 6 runs on 2026-11-24): wait, and retry once.
+      - name: Wait for the Pages artifact to be listed
+        run: sleep 15
+
       - uses: actions/deploy-pages@v4
         id: pages
+        continue-on-error: true
+
+      - name: Wait before retrying the Pages deploy
+        if: steps.pages.outcome == 'failure'
+        run: sleep 60
+
+      - uses: actions/deploy-pages@v4
+        if: steps.pages.outcome == 'failure'
 
       # Heartbeat of the China-side prober (health.py). Runs last so nothing else waits on it;
       # a stale health.json fails the run, and GitHub emails the repository owner.
