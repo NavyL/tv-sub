@@ -1,7 +1,7 @@
 {
   "sources": [
     {"id": "fantaiying", "name": "饭太硬", "urls": ["http://www.饭太硬.cc/tv", "http://www.饭太硬.net/tv", "http://www.饭太硬.xyz/tv"]},
-    {"id": "feimao",     "name": "肥猫",   "urls": ["http://肥猫.net/tv", "http://肥猫.com/tv"]},
+    {"id": "feimao",     "name": "肥猫",   "urls": ["http://肥猫.net/tv"]},
     {"id": "wangerxiao", "name": "王二小", "urls": ["https://9280.kstore.vip/newwex.json", "http://new.王二小放牛娃.top", "https://d.kstore.dev/download/9280/wex.json"]},
     {"id": "laoliubei",  "name": "老刘备", "urls": ["https://raw.liucn.cc/box/m.json"]},
     {"id": "xiaoma",     "name": "小马",   "urls": ["https://szyyds.cn/tv/x.json"]},

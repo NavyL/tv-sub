@@ -29,6 +29,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: pip install pycryptodome
+
       - name: Merge public live lists
         run: python lives.py
         continue-on-error: true

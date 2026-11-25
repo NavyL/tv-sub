@@ -4,7 +4,8 @@
 For every source in sources.json:
   1. try its URLs in order (Chinese domains are punycoded automatically)
   2. unwrap the response: UTF-8 BOM, "image + ** + base64" wrapper,
-     leading // comments, trailing HTML garbage, raw control characters
+     FongMi hex "$#key#$" AES-CBC encryption, leading // comments,
+     trailing HTML garbage, raw control characters, invisible marks
   3. make relative paths (./fty.jar, ./x.js) absolute against the source URL,
      because the file will be served from a different host
   4. write output/<id>.json; a failed source keeps its previous file
@@ -37,6 +38,21 @@ def fetch(url: str, timeout=30) -> bytes:
         return r.read()
 
 
+def decrypt_cbc(data: str) -> str:
+    """FongMi's hex config: hex("$#<key>#$" + ciphertext + 13-char iv), AES/CBC/PKCS5."""
+    from Crypto.Cipher import AES
+    from Crypto.Util.Padding import unpad
+    dec = bytes.fromhex(data).decode("latin-1").lower()
+    key = dec[dec.index("$#") + 2:dec.index("#$")].ljust(16, "0")[:16]
+    iv = dec[-13:].ljust(16, "0")[:16]
+    body = bytes.fromhex(data[data.index("2324") + 4:len(data) - 26])
+    plain = AES.new(key.encode("latin-1"), AES.MODE_CBC, iv.encode("latin-1")).decrypt(body)
+    return unpad(plain, 16).decode("utf-8-sig", "replace")
+
+
+INVISIBLE = dict.fromkeys(map(ord, "\u200b\u200e\u200f\u2060"))   # e.g. LRM around the jar md5 (肥猫)
+
+
 def unwrap(raw: bytes) -> str:
     """Return the config text, stripping image/base64 wrappers."""
     if raw[:2] == b"\xff\xd8" or raw[:3] == b"GIF" or raw[:4] == b"\x89PNG":
@@ -45,11 +61,15 @@ def unwrap(raw: bytes) -> str:
             raise ValueError("image without ** marker")
         raw = base64.b64decode(re.sub(rb"[^A-Za-z0-9+/=]", b"", raw[i + 2:]) + b"==")
     text = raw.decode("utf-8-sig", "replace").replace("\r\n", "\n")
-    if not text.lstrip().startswith(("{", "[", "/")):
+    if re.fullmatch(r"2423[0-9a-fA-F]+", text.strip()):
+        text = decrypt_cbc(text.strip())
+    elif not text.lstrip().startswith(("{", "[", "/")):
         # plain base64 (possibly after a ** marker)
         b = text.split("**", 1)[-1]
         text = base64.b64decode(re.sub(r"[^A-Za-z0-9+/=]", "", b) + "==").decode("utf-8-sig", "replace")
-    return text
+        if re.fullmatch(r"2423[0-9a-fA-F]+", text.strip()):
+            text = decrypt_cbc(text.strip())
+    return text.translate(INVISIBLE)
 
 
 def parse(text: str) -> dict:
